@@ -1,0 +1,854 @@
+Sub Working()
+'=1+((LEN(H2)-LEN(SUBSTITUTE(H2,"##",""))))/2
+' Macro1 Macro
+'
+    Dim lastrowa As Long
+    Dim lastrowb As Long
+'
+    Application.ScreenUpdating = False
+    Sheets("Sheet4").Activate
+    Cells.ClearContents
+    Sheets("Sample Data").Activate
+    Range("C2:E1048576").ClearContents
+    Range("H2:AA1048576").ClearContents
+    Sheets("Analysis").Activate
+    Range("A3:R1048576").ClearContents
+    
+    
+    Sheets("Sample Data").Activate
+    With ActiveSheet
+        lastrowa = .Cells(.Rows.Count, "A").End(xlUp).Row
+    End With
+With ActiveSheet
+        lastrowb = .Cells(.Rows.Count, "F").End(xlUp).Row
+    End With
+    
+    ActiveWorkbook.Worksheets("Sample Data").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("Sample Data").Sort.SortFields.Add Key:=Range( _
+    "G2:G" & lastrowb), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+    xlSortNormal
+     ActiveWorkbook.Worksheets("Sample Data").Sort.SortFields.Add Key:=Range( _
+    "F2:F" & lastrowb), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+    xlSortNormal
+    With ActiveWorkbook.Worksheets("Sample Data").Sort
+        .SetRange Range("F2:G" & lastrowb)
+        .Header = xlGuess
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    
+    ActiveWorkbook.Worksheets("Sample Data").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("Sample Data").Sort.SortFields.Add Key:=Range( _
+    "B2:B" & lastrowa), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+    xlSortNormal
+    ActiveWorkbook.Worksheets("Sample Data").Sort.SortFields.Add Key:=Range( _
+    "A2:A" & lastrowa), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+    xlSortNormal
+    With ActiveWorkbook.Worksheets("Sample Data").Sort
+        .SetRange Range("A2:B" & lastrowa)
+        .Header = xlGuess
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    
+    hashing
+  '  Groupnumbering
+UniquelistandSort
+    
+    
+    
+    'formulateandsort
+    
+'    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Clear
+'    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Add Key:=Range("D1"), _
+'        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+'        xlSortTextAsNumbers
+'    With ActiveWorkbook.Worksheets("Sheet4").Sort
+'        .SetRange Range("D2:D1048575")
+'        .Header = xlNo
+'        .MatchCase = False
+'        .Orientation = xlTopToBottom
+'        .SortMethod = xlPinYin
+'        .Apply
+'    End With
+'    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Clear
+'    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Add Key:=Range( _
+'        "D1:D1048575"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+'        xlSortNormal
+'    With ActiveWorkbook.Worksheets("Sheet4").Sort
+'        .SetRange Range("D1:D1048575")
+'        .Header = xlGuess
+'        .MatchCase = False
+'        .Orientation = xlTopToBottom
+'        .SortMethod = xlPinYin
+'        .Apply
+'    End With
+'    Range("G7").Select
+   Sheets("Sample Data").Activate
+
+    Range("L2").Select
+    Range(ActiveCell, Cells(ActiveCell.End(xlDown).Row, ActiveCell.Column)).Copy
+    
+    Sheets("Analysis").Activate
+    Range("A3").Select
+    ActiveSheet.Paste
+    
+    'HashingCons
+   
+   'HashingCons
+'   Sheets("Sample Data").Activate
+'    Range("A1").Select
+'    Selection.End(xlDown).Select
+'    Selection.Offset(0, 2).Select
+'    Range(Selection, Selection.Offset(0, 2)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+'      Range("F1").Select
+'    Selection.End(xlDown).Select
+'    Selection.Offset(0, 2).Select
+'    Range(Selection, Selection.Offset(0, 3)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+   removedupfromhascons
+    FormulAnalysis
+     
+    Application.ScreenUpdating = True
+    MsgBox "done!"
+    
+    
+End Sub
+
+
+
+Function UniquelistandSort()
+    Dim lastrowUniq As Variant
+    Dim lastrowa As Variant
+    Dim lastrowb As Variant
+    
+    Sheets("Sample Data").Activate
+    With ActiveSheet
+        lastrowa = .Cells(.Rows.Count, "a").End(xlUp).Row
+        lastrowb = .Cells(.Rows.Count, "f").End(xlUp).Row
+    End With
+    Range("A:A").Select
+    Selection.Copy
+    ActiveSheet.Next.Select
+    Range("A1").Select
+    Selection.End(xlUp).Select
+    Selection.End(xlToLeft).Select
+    Selection.End(xlUp).Select
+    ActiveSheet.Paste
+    ActiveSheet.Previous.Select
+    Range("A1").Select
+    Selection.End(xlUp).Select
+    Range("F:F").Select
+    Selection.Copy
+    ActiveSheet.Next.Select
+    Range("B1").Select
+    ActiveSheet.Paste
+    Columns("A:A").Select
+    Application.CutCopyMode = False
+'    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Clear
+'    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Add Key:=Range("A1"), _
+'        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+'        xlSortTextAsNumbers
+'    With ActiveWorkbook.Worksheets("Sheet4").Sort
+'        .SetRange Range("A2:A1048575")
+'        .Header = xlNo
+'        .MatchCase = False
+'        .Orientation = xlTopToBottom
+'        .SortMethod = xlPinYin
+'        .Apply
+'    End With
+'    Columns("B:B").Select
+'    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Clear
+'    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Add Key:=Range("B1"), _
+'        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+'        xlSortTextAsNumbers
+'    With ActiveWorkbook.Worksheets("Sheet4").Sort
+'        .SetRange Range("B2:B1048575")
+'        .Header = xlNo
+'        .MatchCase = False
+'        .Orientation = xlTopToBottom
+'        .SortMethod = xlPinYin
+'        .Apply
+'    End With
+'
+    Range("D:D").Select
+    Selection.ClearContents
+    
+    Range("A2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    
+    Range("D1").Select
+    
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    Range("B2").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Range("D1").Select
+    Selection.End(xlDown).Select
+    ActiveCell.Offset(rowOffset:=1).Activate
+    
+    ActiveSheet.Paste
+    Columns("D:D").Select
+    Application.CutCopyMode = False
+    ActiveSheet.Range("$D$1:$D$1048575").RemoveDuplicates Columns:=1, Header:= _
+    xlNo
+    Columns("D:D").Select
+    
+    
+    Sheets("Sheet4").Activate
+    
+    Sheets("Sheet4").[e1] = "=COUNTIF(A:A,D1)"
+    Sheets("Sheet4").[F1] = "=COUNTIF(B:B,D1)"
+    Sheets("Sheet4").[G1] = "=E1+F1"
+    Sheets("Sheet4").[h1] = "=IF(E1>0,IF(F1>0,""Common"",""Unique 1""),IF(F1>0,""Unique 2"",""No Value""))"
+    
+    Range("D1").Select
+    Range("D1").End(xlDown).Select
+    ActiveCell.Offset(0, 1).Select
+    Range(Selection, Selection.Offset(0, 3)).Select
+    Range(Selection, Selection.End(xlUp)).Select
+    Selection.FillDown
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    
+     With ActiveSheet
+        lastrowUniq = .Cells(.Rows.Count, "d").End(xlUp).Row
+    End With
+    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("Sheet4").Sort.SortFields.Add Key:=Range("H1:H" & lastrowa) _
+    , SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("Sheet4").Sort
+        .SetRange Range("D1:H" & lastrowa)
+        .Header = xlGuess
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+    
+     Range("D1").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Sheets("sample data").Activate
+    Range("l2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+Sheets("sample data").[m2] = "=IF(ISERROR(VLOOKUP(L2,A:C,3,0)),IF(ISERROR(VLOOKUP(L2,F:H,3,0)),"""",VLOOKUP(L2,F:H,3,0)),VLOOKUP(L2,A:C,3,0)&IF(ISERROR(VLOOKUP(L2,F:H,3,0)),"""",""##""&VLOOKUP(L2,F:H,3,0)))"
+Sheets("sample data").[n2] = "=IF(ISERROR(VLOOKUP(L2,A:B,2,0)),VLOOKUP(L2,F:G,2,0),VLOOKUP(L2,A:B,2,0))"
+
+'Range("l1").End(xlDown).Select
+'
+'Range(Selection.Offset(0, 1), Selection.Offset(0, 2)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+
+Range("m2:n2").Select
+Range("M2:n" & lastrowUniq + 1).Select
+Selection.FillDown
+Selection.Copy
+Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+Sheets("Sheet4").Activate
+ Range("H1").Select
+    Range("H1:h" & lastrowUniq).Select
+    Selection.Copy
+    Sheets("sample data").Activate
+    Range("z2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+
+Sheets("sample data").Activate
+    
+Sheets("sample data").[E2] = "=COUNTIF(D:D,D2)"
+Range(Selection, Selection.End(xlUp)).Select
+Range("e2:e" & lastrowa).Select
+    Selection.FillDown
+ Selection.Copy
+Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    Sheets("sample data").[J2] = "=COUNTIF(i:i,i2)"
+Range(Selection, Selection.End(xlUp)).Select
+Range("J2:J" & lastrowb).Select
+    Selection.FillDown
+ Selection.Copy
+Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    
+    
+End Function
+
+'
+'Function Groupnumbering()
+'    Sheets("Sample Data").Activate
+'
+'    Columns("B:B").Select
+'    Selection.Copy
+'    ActiveSheet.Next.Select
+'    Range("K1").Select
+'    ActiveSheet.Paste
+'    ActiveSheet.Previous.Select
+'    Columns("G:G").Select
+'    Application.CutCopyMode = False
+'    Selection.Copy
+'    ActiveSheet.Next.Select
+'    Range("M1").Select
+'    ActiveSheet.Paste
+'    Columns("K:K").Select
+'    Application.CutCopyMode = False
+'    ActiveSheet.Range("$K$1:$K$400000").RemoveDuplicates Columns:=1, Header:=xlYes
+'    Columns("M:M").Select
+'    ActiveSheet.Range("$M$1:$M$400000").RemoveDuplicates Columns:=1, Header:=xlYes
+'
+'    Sheets("Sheet4").[i2] = "=IF(K2<>"""",i1+1)"
+'
+'    Sheets("Sheet4").[J2] = "=IF(m2<>"""",j1+1)"
+'    Sheets("Sheet4").[l2] = "=""B""&I2"
+'    Sheets("Sheet4").[n2] = "=""G""&J2"
+'
+'    Range("k1").Select
+'    Range("k1").End(xlDown).Select
+'    ActiveCell.Offset(0, 1).Select
+''Range(Selection, Selection.Offset(0, 10)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+'
+'    Range("k1").Select
+'    Range("k1").End(xlDown).Select
+'    ActiveCell.Offset(0, -2).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+'
+'    Range("m1").Select
+'    Range("m1").End(xlDown).Select
+'    ActiveCell.Offset(0, 1).Select
+''Range(Selection, Selection.Offset(0, 10)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+'
+'
+'
+'    Range("m1").Select
+'    Range("m1").End(xlDown).Select
+'    ActiveCell.Offset(0, -3).Select
+''Range(Selection, Selection.Offset(0, 10)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+'
+'
+'End Function
+Function hashing()
+    Dim lastrowa As Long
+    Dim lastrowb As Long
+    
+    Sheets("Sample Data").Activate
+    With ActiveSheet
+        lastrowa = .Cells(.Rows.Count, "A").End(xlUp).Row
+    End With
+    
+    Dim bluegroupheaders()
+    Dim bluehashed As String
+    Dim prevbluegroupheaders As String
+    Dim previ As Integer
+    Dim grpprevnum As Integer
+    
+    bluegroupheaders = Range("a2:b" & lastrowa + 1)
+    previ = 1
+    grpprevnum = 0
+    For i = 1 To UBound(bluegroupheaders)
+    
+    If (prevbluegroupheaders = bluegroupheaders(i, 2)) Then
+        
+    bluehashed = bluehashed & "##" & bluegroupheaders(i, 1)
+    'MsgBox ("s")
+    Else
+    grpprevnum = grpprevnum + 1
+    For ii = previ To i
+    
+    If prevbluegroupheaders = bluegroupheaders(ii, 2) Then
+    
+    Cells(ii + 1, 3).Value = bluehashed
+    Cells(ii + 1, 4).Value = "B" & grpprevnum - 1
+    
+    End If
+   Next
+   
+    previ = i
+    bluehashed = bluegroupheaders(i, 1)
+    
+    End If
+    
+    
+    prevbluegroupheaders = bluegroupheaders(i, 2)
+    
+    Next
+    
+'    Sheets("Sample Data").[q2] = "=IF(S2<>"""",B2)"
+'    Sheets("Sample Data").[r2] = "=IF(B2<>B1,""Unique"","""")"
+'    Sheets("Sample Data").[s2] = "=IF(R3<>""unique"","""",U2)"
+'    Sheets("Sample Data").[t2] = "=LEN(U2)"
+'    Sheets("Sample Data").[u2] = "=IF(B2<>B1,A2,U1&""##""&A2)"
+'    Sheets("Sample Data").[v2] = "=IF(X2<>"""",G2)"
+'    Sheets("Sample Data").[w2] = "=IF(G2<>G1,""Unique"","""")"
+'    Sheets("Sample Data").[x2] = "=IF(W3<>""unique"","""",Z2)"
+'    Sheets("Sample Data").[y2] = "=LEN(Z2)"
+'    Sheets("Sample Data").[z2] = "=IF(G2<>G1,F2,z1&""##""&F2)"
+'
+    '********************************************************Green
+     With ActiveSheet
+        lastrowb = .Cells(.Rows.Count, "F").End(xlUp).Row
+    End With
+    
+    
+    Dim greengroupheaders()
+    Dim greenhashed As String
+    Dim prevgreengroupheaders As String
+    Dim previg As Integer
+    
+    
+    grpprevnum = 0
+    greengroupheaders = Range("f2:g" & lastrowb + 1)
+    previg = 1
+    For i = 1 To UBound(greengroupheaders)
+    
+    If (prevgreengroupheaders = greengroupheaders(i, 2)) Then
+        
+    greenhashed = greenhashed & "##" & greengroupheaders(i, 1)
+    'MsgBox ("s")
+    Else
+      grpprevnum = grpprevnum + 1
+    For ii = previg To i
+    
+    If prevgreengroupheaders = greengroupheaders(ii, 2) Then
+    
+    Cells(ii + 1, 8).Value = greenhashed
+        Cells(ii + 1, 9).Value = "G" & grpprevnum - 1
+    End If
+   Next
+   
+    previg = i
+    greenhashed = greengroupheaders(i, 1)
+    
+    End If
+    
+    
+    prevgreengroupheaders = greengroupheaders(i, 2)
+    
+    Next
+    
+    '*********************************end GReen
+    
+   
+'MsgBox lastRowA
+    
+   
+'MsgBox lastRowb
+'    If lastrowa > lastrowb Then
+'        Cells(lastrowa + 2, 17).Select
+'    Else
+'        Cells(lastrowb + 2, 17).Select
+'    End If
+'
+''Columns("f:f").Select
+''    Selection.Copy
+''Range("p1").Select
+''    ActiveSheet.Paste
+''
+''Range("p1").Select
+''Range("p1").End(xlDown).Select
+''ActiveCell.Offset(0, 1).Select
+'    Range(Selection, Selection.Offset(0, 10)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+    
+    
+End Function
+'Function HashingCons()
+'    Dim lastRa As Long
+'    Dim lastRb As Long
+'
+'    Sheets("Sheet4").Activate
+'    Range("Q:W").Select
+'    Selection.ClearContents
+'
+'    Sheets("Sheet4").[A1].Value = "System 1"
+'    Sheets("Sheet4").[B1].Value = "System 2"
+'    Sheets("Sheet4").[K1].Value = "GROUP HEAD"
+'    Sheets("Sheet4").[M1].Value = "GROUP HEAD"
+'
+'    Sheets("Sheet4").[r1].FormulaArray = "=MAX(IF(C[2]=RC[-1],C[3]))"
+'    Sheets("Sheet4").[s1] = "=VLOOKUP(Q1&R1,V:W,2,0)"
+'    Sheets("Sheet4").[t1] = "=IF(VLOOKUP(D1,Analysis!A:F,5,0)<>""NA"",VLOOKUP(D1,Analysis!A:F,5,0),IF(VLOOKUP(D1,Analysis!A:J,9,0)<>""NA"",VLOOKUP(D1,Analysis!A:J,9,0)))"
+'    Sheets("Sheet4").[u1] = "=LEN(W1)"
+'    Sheets("Sheet4").[v1] = "=T1&U1"
+'    Sheets("Sheet4").[w1] = "=IF(Analysis!E3<>""NA"",VLOOKUP(Analysis!E3,'Sample Data'!C:D,2,0),"""")&IF(Analysis!I3<>""NA"",IF(Analysis!E3<>""NA"",""##""&VLOOKUP(Analysis!I3,'Sample Data'!H:I,2,0),VLOOKUP(Analysis!I3,'Sample Data'!H:I,2,0)),"""")"
+'
+'
+'    With ActiveSheet
+'        lastRa = .Cells(.Rows.Count, "D").End(xlUp).Row
+'    End With
+'
+'    Cells(lastRa, 20).Select
+'    Range(Selection, Selection.Offset(0, 3)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+'
+'
+'    Range("l2").Select
+'    Range(Selection, Selection.End(xlDown)).Select
+'    Selection.Copy
+'
+'    With Range("Q1").Select
+'
+'        Selection.PasteSpecial (xlValues)
+'    End With
+'    Application.CutCopyMode = False
+'    Range("N2").Select
+'    Range(Selection, Selection.End(xlDown)).Select
+'    Selection.Copy
+'    Range("Q1").Select
+'    Selection.End(xlDown).Select
+'    ActiveCell.Offset(rowOffset:=1).Activate
+'
+'    With ActiveCell.Select
+'
+'        Selection.PasteSpecial (xlValues)
+'    End With
+'
+'    Columns("Q:Q").Select
+'    Application.CutCopyMode = False
+'    ActiveSheet.Range("$q$1:$q$1048575").RemoveDuplicates Columns:=1, Header:= _
+'    xlNo
+'    With ActiveSheet
+'        lastRb = .Cells(.Rows.Count, "Q").End(xlUp).Row
+'    End With
+'
+'    Cells(lastRb, 18).Select
+'    Range(Selection, Selection.Offset(0, 1)).Select
+'    Range(Selection, Selection.End(xlUp)).Select
+'    Selection.FillDown
+'
+'
+'
+'End Function
+
+
+Function FormulAnalysis()
+
+Sheets("sheet4").Activate
+With ActiveSheet
+        lastrowUniq = .Cells(.Rows.Count, "d").End(xlUp).Row
+    End With
+    
+Sheets("analysis").Activate
+ Range("B3:K3").Select
+ Range(Selection, Selection.End(xlDown)).Select
+ Selection.ClearContents
+ 
+Sheets("Analysis").[b3] = "=VLOOKUP(A3,'Sample Data'!L:z,15,0)"
+Sheets("Analysis").[c3] = "=IF(ISERROR(VLOOKUP($A3,'Sample Data'!A:B,2,0))=FALSE,VLOOKUP($A3,'Sample Data'!A:B,2,0),""Unique"")"
+Sheets("Analysis").[D3] = "=IF(ISERROR(VLOOKUP($A3,'Sample Data'!A:D,3,0)),""Missing in this set"",VLOOKUP($A3,'Sample Data'!A:D,3,0))"
+Sheets("Analysis").[E3] = "=IF(ISERROR(VLOOKUP(C3,'Sample Data'!B:D,3,0)),""NA"",VLOOKUP(C3,'Sample Data'!B:D,3,0))"
+Sheets("Analysis").[F3] = "=VLOOKUP(A3,'Sample Data'!A:E,5,0)"
+Sheets("Analysis").[G3] = "=IF(ISERROR(VLOOKUP($A3,'Sample Data'!F:G,2,0))=FALSE,VLOOKUP($A3,'Sample Data'!F:G,2,0),""Unique"")"
+Sheets("Analysis").[H3] = "=IF(ISERROR(VLOOKUP($A3,'Sample Data'!F:H,3,0)),""Missing in this set"",VLOOKUP($A3,'Sample Data'!F:h,3,0))"
+Sheets("Analysis").[i3] = "=IF(ISERROR(VLOOKUP(G3,'Sample Data'!G:I,3,0)),""NA"",VLOOKUP(G3,'Sample Data'!G:I,3,0))"
+Sheets("Analysis").[J3] = "=IF(ISERROR(VLOOKUP(A3,'Sample Data'!F:J,5,0)),""NA"",VLOOKUP(A3,'Sample Data'!F:J,5,0))"
+Sheets("Analysis").[k3] = "=VLOOKUP(A3,'Sample Data'!L:O,4,0)"
+Sheets("Analysis").[l3] = "=1+((LEN(K3)-LEN(SUBSTITUTE(K3,""##"",""""))))/2"
+
+'  Range("A1").Select
+'    Selection.End(xlDown).Select
+'    Selection.Offset(0, 1).Select
+    Range("b3", "L" & (lastrowUniq + 2)).Select
+    
+    Selection.FillDown
+Selection.Copy
+Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+
+End Function
+
+
+Function removedupfromhascons()
+Dim lastRb As Long
+Dim lastRob As Long
+Dim Array_2()
+Dim Array_1
+Dim a_sn As String
+Dim var As String
+Dim msg As String
+Dim hashedvalues() As Variant
+Dim splitvalues() As String
+Dim arrforsort As Variant
+Dim arr As New Collection, A
+Dim f As Long
+Dim deduplicated As String
+
+Sheets("Sample Data").Activate
+With ActiveSheet
+lastRob = .Cells(.Rows.Count, "M").End(xlUp).Row
+End With
+Cells(1, 13).Select
+Range("M2:M" & lastRob).Select
+hashedvalues = Range("M2:M" & lastRob)
+    For i = 1 To UBound(hashedvalues)
+    'On Error Resume Next
+    a_sn = hashedvalues(i, 1)
+    splitvalues = Split(a_sn, "##")
+
+
+    On Error Resume Next
+            For Each A In splitvalues
+            arr.Add A, A
+            Next
+    arrforsort = CollectionToArray(arr)
+    UserForm1.ListBox1.List = arrforsort
+    ListBox1.sorted = True
+                    For f = 1 To arr.Count
+                    If f = 1 Then
+                    deduplicated = arr(f)
+                    Else
+                    deduplicated = deduplicated & "##" & arr(f)
+                    End If
+                    
+                    Next
+Range("o" & i + 1) = deduplicated
+Set arr = New Collection
+
+splitvalues = Null
+Next
+eror:
+
+'  Dim strTemp As String
+'  Dim Ai As Long
+'  Dim Aj As Long
+'  Dim lngMin As Long
+'  Dim lngMax As Long
+'  lngMin = LBound(arrforsort)
+'  lngMax = UBound(arrforsort)
+'  For Ai = lngMin To lngMax - 1
+'    For Aj = Ai + 1 To lngMax
+'      If arr(Ai) > arr(Aj) Then
+'        strTemp = arrforsort(Ai)
+'        arr(Ai) = arrforsort(Aj)
+'        arr(Aj) = strTemp
+'      End If
+'    Next Aj
+'  Next Ai
+'QuickSort arrforsort, LBound(arrforsort), UBound(arrforsort)
+
+End Function
+
+'Sub maxdeduped()
+'Dim lastRa As Long
+'Dim lastRob As Long
+'Dim Array_2()
+'Dim Array_1
+'Dim a_sn As String
+'Dim var As String
+'Dim msg As String
+'Dim uniqueheader() As Variant
+'Dim refrange() As Variant
+'Dim arr As New Collection, A
+'Dim f As Long
+'Dim deduplicated As String
+'
+'Sheets("Sample Data").Activate
+'With ActiveSheet
+'lastRa = .Cells(.Rows.Count, "N").End(xlUp).Row
+'End With
+'
+' Range("N2", "N" & (lastRa)).Select
+'Selection.Copy
+'Range("R2").PasteSpecial xlPasteValues
+'Range("R2", "R" & lastRa).RemoveDuplicates Columns:=1, Header:=xlNo
+''************************************************* unique list of headers done now workfor max members
+'
+'With ActiveSheet
+'lastRob = .Cells(.Rows.Count, "r").End(xlUp).Row
+'End With
+'Range("M2:M" & lastRob).Select
+'uniqueheader = Range("r2:r" & lastRa)
+'refrange = Range("N2", "o" & lastRob)
+'
+'
+'    For i = 1 To UBound(uniqueheader)
+'    'On Error Resume Next
+'    a_sn = uniqueheader(i, 1)
+'    currentlen = 0
+'    maxlen = 0
+'    For j = 1 To UBound(refrange)
+'    If refrange(j, 1) = a_sn Then
+'    currentlen = Len(refrange(j, 2))
+'        If currentlen > maxlen Then
+'        maxlen = currentlen
+'        finalmembers = refrange(j, 2)
+'        Else
+'        End If
+'    End If
+'
+'    Next
+'   ' MsgBox a_sn
+'
+'    'MsgBox finalmembers
+'    Range("S" & i + 1).Value = finalmembers
+'    Next
+''    splitvalues = Split(a_sn, "##")
+''
+''
+''    On Error Resume Next
+''            For Each a In splitvalues
+''            arr.Add a, a
+''            Next
+''                    For f = 1 To arr.Count
+''                    If f = 1 Then
+''                    deduplicated = arr(f)
+''                    Else
+''                    deduplicated = deduplicated & "##" & arr(f)
+''                    End If
+''
+''                    Next
+''Range("q" & i + 1) = deduplicated
+''Set arr = New Collection
+''
+''splitvalues = Null
+'
+'
+'
+'
+'
+'
+'
+'
+'End Sub
+
+Function CollectionToArray(C As Collection) As Variant()
+
+Dim A() As Variant
+Dim Ci As Variant   ' Collection element
+Dim i As Long
+    
+    ' Make sure Size is not less than collection size
+    If Size < C.Count Then Size = C.Count
+    
+    ' Set starting index (zero by default)
+    i = StartIdx
+    
+    ' Transfer collection to array
+    ReDim A(i To i + Size - 1)
+    For Each Ci In C
+        A(i) = Ci
+        i = i + 1
+    Next
+
+    CollectionToArray = A
+
+
+End Function
+
+'Sub QuickSort(arr, Lo As Long, Hi As Long)
+'  Dim varPivot As Variant
+'  Dim varTmp As Variant
+'  Dim tmpLow As Long
+'  Dim tmpHi As Long
+'  tmpLow = Lo
+'  tmpHi = Hi
+'  varPivot = arr((Lo + Hi) \ 2)
+'  Do While tmpLow <= tmpHi
+'    Do While arr(tmpLow) < varPivot And tmpLow < Hi
+'      tmpLow = tmpLow + 1
+'    Loop
+'    Do While varPivot < arr(tmpHi) And tmpHi > Lo
+'      tmpHi = tmpHi - 1
+'    Loop
+'    If tmpLow <= tmpHi Then
+'      varTmp = arr(tmpLow)
+'      arr(tmpLow) = arr(tmpHi)
+'      arr(tmpHi) = varTmp
+'      tmpLow = tmpLow + 1
+'      tmpHi = tmpHi - 1
+'    End If
+'  Loop
+'  If Lo < tmpHi Then QuickSort arr, Lo, tmpHi
+'  If tmpLow < Hi Then QuickSort arr, tmpLow, Hi
+'End Sub
+
+
+'
+'
+''
+'Sub SortListBox(lst As MSForms.ListBox)
+'
+'    Dim arrItems            As Variant
+'
+'    Dim arrTemp             As Variant
+'
+'    Dim intOuter            As Long
+'
+'    Dim intInner            As Long
+'
+'
+'
+'    arrItems = lst.List
+'
+'
+'
+'    For intOuter = LBound(arrItems, 1) To UBound(arrItems, 1)
+'
+'        For intInner = intOuter + 1 To UBound(arrItems, 1)
+'
+'            If arrItems(intOuter, 0) > arrItems(intInner, 0) Then
+'
+'                arrTemp = arrItems(intOuter, 0)
+'
+'                arrItems(intOuter, 0) = arrItems(intInner, 0)
+'
+'                arrItems(intInner, 0) = arrTemp
+'
+'            End If
+'
+'        Next intInner
+'
+'    Next intOuter
+'
+'
+'
+'    'Clear the listbox
+'
+'    lst.Clear
+'
+'
+'
+'    'Add the sorted array back to the listbox
+'
+'    For intOuter = LBound(arrItems, 1) To UBound(arrItems, 1)
+'
+'        lst.AddItem arrItems(intOuter, 0)
+'
+'    Next intOuter
+'
+'End Sub
+'
+'
+'
+'Sub ExecuteFunction()
+'
+'    Call SortListBox(Sheet1.ListBox1)
+'
+'End Sub
