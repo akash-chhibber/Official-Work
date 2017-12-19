@@ -1,8 +1,9 @@
-  Sub uppercase()
+Sub uppercase()
     Dim number As Integer
-    On Error Resume Next
+    Dim sh As Worksheet
+        On Error Resume Next
     
-    number = InputBox("where do you want to run this macro, Enter 1 for selection and 2 for whole sheet :")
+    number = InputBox("where do you want to run this macro, Enter 1 for selection across sheets, 2 for whole sheet and 3 for entire workbook:")
     result = number
     Select Case result
     Case Is = 1
@@ -33,48 +34,20 @@
             End If
         Next
         MsgBox "done!"
-    End Select
+    Case Is = 3
+        MsgBox ("You have chosen to run on entire workbook.")
+        For Each sh In ActiveWorkbook.Worksheets
+        sh.Activate
+        For Each Cell In Application.ActiveSheet.UsedRange
+            If (Cell.Value <> "") Then
+                Cell.Value = UCase(Left(Cell.Value, 1)) & Right(Cell.Value, Len(Cell.Value) - 1)
+            End If
+        Next
+        Next
+        MsgBox "done!"
     
-    'Sub uppercase()
-'Dim number As Integer
-'
-'  On Error Resume Next
-'
-'number = InputBox("Enter any number :")
-'result = number
-'Select Case result
-'Case Is = 1
-'  MsgBox ("The number you entered is even.")
-'   For Each sh In Worksheets
-'   sh.Activate
-'    Set Rng = Selection ' sh.UsedRange.SpecialCells(xlCellTypeConstants) 'Application.ActiveSheet.UsedRange
-''    If Err.Number <> 0 Then
-''        Err.Clear
-''    Else
-''    On Error GoTo 0
-'    For Each cell In Rng
-'    If (cell.Value <> "") Then
-'         cell.Value = UCase(Left(cell.Value, 1)) & Right(cell.Value, Len(cell.Value) - 1)
-'    End If
-'    Next
-'MsgBox sh.Name
-'Next
-''    End If
-'MsgBox "done!"
-'
-'Case Is = 2
-'  MsgBox ("The number you entered is odd.")
-'
-'For Each cell In Application.ActiveSheet.UsedRange
-'    If (cell.Value <> "") Then
-'         cell.Value = UCase(Left(cell.Value, 1)) & Right(cell.Value, Len(cell.Value) - 1)
-'    End If
-'Next
-'MsgBox "done!"
-'End Select
-'
-'
-'End Sub
+    End Select
+     
 End Sub
 
 Sub Clean_and_Trim_Cells()
@@ -135,7 +108,7 @@ Dim WS As Worksheet
 For Each WS In Worksheets
   WS.Activate
 ActiveWindow.DisplayGridlines = False
-    ActiveWindow.Zoom = 100
+    ActiveWindow.Zoom = 90
     ActiveWindow.View = xlNormalView
     ActiveSheet.DisplayPageBreaks = False
     Range("A1").Select
@@ -194,7 +167,7 @@ MakeSubTextBold
 End Sub
 Function MakeSubTextBold()
   Dim x As Long, Position As Long, Cell As Range
-  Dim Msg As String, Txt As String, Parts() As String
+  Dim msg As String, Txt As String, Parts() As String
   For Each Cell In Selection
     Position = 0
     Txt = Cell.Value
@@ -210,16 +183,16 @@ Function MakeSubTextBold()
           Position = Position + Len(Parts(x))
         Next
       Else
-        Msg = Msg & Cell.Address(0, 0) & vbLf
+        msg = msg & Cell.Address(0, 0) & vbLf
       End If
     End If
   Next
-  If Len(Msg) Then MsgBox "These cells had unbalanced tags and were not processed:" & _
-              vbLf & "======================================" & vbLf & Msg, vbCritical
+  If Len(msg) Then MsgBox "These cells had unbalanced tags and were not processed:" & _
+              vbLf & "======================================" & vbLf & msg, vbCritical
 End Function
  
  
-Function FindReplaceAll()
+Function \()
 Dim sht As Worksheet
 Dim fnd As Variant
 Dim rplc As Variant
@@ -368,11 +341,9 @@ Sub DoTheExport()
     Dim fldr As FileDialog
 Dim sItem As String
 
-    Set Sourcewb = ThisWorkbook
+    Set Sourcewb = ActiveWorkbook
     
-       Dim FolderName As String
-    Dim fldr As FileDialog
-    Set fldr = Application.FileDialog(msoFileDialogFolderPicker)
+        Set fldr = Application.FileDialog(msoFileDialogFolderPicker)
         With fldr
             .Title = "Select a Folder"
             .AllowMultiSelect = False
@@ -452,7 +423,8 @@ GoToNextSheet:
 End Sub
 
 
-Option Explicit
+
+
 
  
 
@@ -1169,5 +1141,121 @@ Application.ScreenUpdating = True
 
 End Sub
 
+
+
+Sub Consolidate_all_sheets()
+    Dim lastRb As Long
+    Dim lastRoaSample As Long
+    Dim lastRoa As Long
+    Dim lastRoC As Long
+    Dim Array_2()
+    Dim Array_1
+    Dim a_sn As String
+    Dim var As String
+    Dim msg As String
+    Dim hashedvalues() As Variant
+    Dim splitvalues() As String
+    Dim arrforsort As Variant
+    Dim arr As New Collection, A
+    Dim f As Long
+    Dim deduplicated As String
+    Dim checkSheetName As String
+     Dim newSheetName As String
+     
+     
+    newSheetName = Application.InputBox("Input Sheet Name:", , "sheet4", , , , , 2)
+    On Error Resume Next
+    checkSheetName = Worksheets(newSheetName).Name
+    If checkSheetName = "" Then
+        Worksheets.Add.Name = newSheetName
+        MsgBox "The sheet named ''" & newSheetName & _
+        "'' does not exist in this workbook but it has been created now.", _
+        vbInformation, "Kutools for Excel"
+         
+    Else
+        MsgBox "The sheet named ''" & newSheetName & _
+        "''exist in this workbook.", vbInformation, "Kutools for Excel"
+    End If
+    
+    
+    For i = 1 To Worksheets.Count
+        If Sheets(i).Name <> "Sample" Then
+            Sheets(i).Activate
+            With ActiveSheet
+                lastRoa = .Cells(.Rows.Count, "A").End(xlUp).Row
+            End With
+            With ActiveSheet
+                lastRoC = .Cells(.Rows.Count, "C").End(xlUp).Row
+            End With
+            
+            
+            If (lastRoC > lastRoa) Or (lastRoC = lastRoa) Then
+            Columns("A:A").Select
+            Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+            Range("A1:A" & lastRoC).Value = Sheets(i).Name
+            
+            With ActiveSheet
+                    lastRoaSample = .Cells(.Rows.Count, "A").End(xlUp).Row
+                End With
+                Sheets(i).Activate
+                Range("A1:Z" & lastRoC).Copy
+                Worksheets(newSheetName).Activate
+                With Cells(lastRoaSample + 1, 1)
+                    .PasteSpecial xlPasteValues
+                    .PasteSpecial xlPasteFormats
+                    Application.CutCopyMode = False
+                End With
+                
+         
+            
+        Else
+        Columns("A:A").Select
+            Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+            Range("A1:A" & lastRoa).Value = Sheets(i).Name
+            Worksheets(newSheetName).Activate
+            With ActiveSheet
+                lastRoaSample = .Cells(.Rows.Count, "A").End(xlUp).Row
+            End With
+            Sheets(i).Activate
+            Range("A1:Z" & lastRoa).Copy
+            Worksheets(newSheetName).Activate
+            With Cells(lastRoaSample + 1, 1)
+                .PasteSpecial xlPasteValues
+                .PasteSpecial xlPasteFormats
+                Application.CutCopyMode = False
+            End With
+            
+            
+               End If
+            
+        End If
+        
+    Next
+    
+End Sub
+
+
+
+    
+
+Sub TestSheetCreate()
+'Updateby Extendoffice 20160922
+    Dim newSheetName As String
+    Dim checkSheetName As String
+    newSheetName = Application.InputBox("Input Sheet Name:", "Kutools for Excel", _
+                                    "sheet4", , , , , 2)
+    On Error Resume Next
+    checkSheetName = Worksheets(newSheetName).Name
+    If checkSheetName = "" Then
+        Worksheets.Add.Name = newSheetName
+        MsgBox "The sheet named ''" & newSheetName & _
+        "'' does not exist in this workbook but it has been created now.", _
+        vbInformation, "Kutools for Excel"
+         
+    Else
+        MsgBox "The sheet named ''" & newSheetName & _
+        "''exist in this workbook.", vbInformation, "Kutools for Excel"
+    End If
+End Sub
 
 
