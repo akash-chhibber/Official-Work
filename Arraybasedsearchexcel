@@ -1,0 +1,291 @@
+'Sub Arraybasedsearch(Optional Folderpath As Variant, Optional str As Variant)
+''Application.EnableCancelKey = xlDisabled
+'
+'Dim myArray() As Variant, myArrayPointer As Long
+'Dim uiValue As Variant
+'Dim UIArray As Variant
+'Dim myfolder As String
+'    Dim a As Single
+'    Dim sht As Worksheet
+'    Dim Lrow As Single
+'    Dim Folders() As String
+'    Dim Folder As Variant
+'    'Dim myArrayPointer As Long, myArray() As Variant
+'    'Dim uiValue As Variant
+'    'Dim UIArray As Variant
+'
+'    ReDim Folders(0)
+'
+'
+'ReDim myArray(1 To 1)
+'myArrayPointer = 1
+'
+'
+'Do Until uiValue <> Null
+'reenter:
+'
+'uiValue = Application.InputBox("EnterSomething", Type:=2)
+'If uiValue = False Then GoTo endsub
+'If uiValue = "" Then GoTo reenter
+'myArrayPointer = myArrayPointer + 1
+'If myArrayPointer > UBound(myArray) Then
+'
+'End If
+'ReDim Preserve myArray(1 To myArrayPointer - 1)
+'myArray(myArrayPointer - 1) = uiValue
+'Loop
+'
+'If myArrayPointer = 0 Then
+'MsgBox "nothing entered"
+'Else
+'ReDim Preserve myArray(1 To myArrayPointer)
+'
+'End If
+'
+'endsub:
+''
+''For UIArray = 1 To UBound(myArray)
+''            Debug.Print (myArray(UIArray))
+''        Next UIArray
+''
+' With Application.FileDialog(msoFileDialogFolderPicker)
+'            .Show
+'            myfolder = .SelectedItems(1) & "\"
+'        End With
+'
+'
+' For UIArray = 1 To UBound(myArray)
+'            str = myArray(UIArray)
+'
+''    If IsMissing(Folderpath) Then
+'        With ThisWorkbook
+'        Set WS = .Sheets.Add(After:=.Sheets(.Sheets.Count))
+'        WS.Name = str
+'        End With
+'
+'
+''Str = Application.InputBox(Prompt:="Search string:", Title:="Search all workbooks in a folder", Type:=2)
+''MsgBox myArrayPointer - 1 & " elements entered"
+'            WS.Range("A1") = "Search string:"
+'            WS.Range("B1") = str
+'            WS.Range("A2") = "Path:"
+'            WS.Range("B2") = myfolder
+'            WS.Range("A3") = "Folderpath"
+'            WS.Range("B3") = "Workbook"
+'            WS.Range("C3") = "Worksheet"
+'            WS.Range("D3") = "Cell Address"
+'            WS.Range("E3") = "Link"
+'            Folderpath = myfolder
+'            Value = Dir(myfolder, &H1F)
+'        'Else
+'            If Right(Folderpath, 2) = "\\" Then
+'                Exit Sub
+'            End If
+'            Value = Dir(Folderpath, &H1F)
+'        'End If
+'        Do Until Value = ""
+'            If Value = "." Or Value = ".." Then
+'            Else
+'                If GetAttr(Folderpath & Value) = 16 Then
+'                    Folders(UBound(Folders)) = Value
+'                    ReDim Preserve Folders(UBound(Folders) + 1)
+'                ElseIf Right(Value, 3) = "xls" Or Right(Value, 4) = "xlsx" Or Right(Value, 4) = "xlsm" Then
+'                    On Error Resume Next
+'                    Workbooks.Open Filename:=Folderpath & Value 'Password:="zzzzzzzzzzzz"
+'                    If Err.Number <> 0 Then
+'                        WS.Range("A4").Offset(a, 0).Value = Value
+'                        WS.Range("B4").Offset(a, 0).Value = "Password protected"
+'                        a = a + 1
+'                        On Error GoTo 0
+'                    Else
+'                        For Each sht In ActiveWorkbook.Worksheets
+''Expand all groups in sheet
+'                            sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
+'                            Set c = sht.Cells.Find(str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+'                            If Not c Is Nothing Then
+'                                firstAddress = c.Address
+'                                Do
+'                                    Lrow = WS.Range("A" & Rows.Count).End(xlUp).Row
+'                                    WS.Range("A1").Offset(Lrow, 0).Value = Folderpath
+'                                    WS.Range("B1").Offset(Lrow, 0).Value = Value
+'                                    WS.Range("C1").Offset(Lrow, 0).Value = sht.Name
+'                                    WS.Range("D1").Offset(Lrow, 0).Value = c.Address
+'                                    WS.Hyperlinks.Add Anchor:=WS.Range("E1").Offset(Lrow, 0), Address:=Folderpath & Value, SubAddress:= _
+'                                    "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
+'                                    Set c = sht.Cells.FindNext(c)
+'                                Loop While Not c Is Nothing And c.Address <> firstAddress
+'                            End If
+'                            Next sht
+'                        End If
+'                        Workbooks(Value).Close False
+'                        On Error GoTo 0
+'                    End If
+'                End If
+'                Value = Dir
+'            Loop
+''COMMENTING THIS AREA SO AS NOT TO REPEAT FOR ALL SUB FOLDERS
+''For Each Folder In Folders
+''                Arraybasedsearch (Folderpath & Folder & "\")
+''                Next Folder
+''                Cells.EntireColumn.AutoFit
+'
+'                Next UIArray
+'
+'
+'
+''MsgBox myArrayPointer - 1 & " elements entered"
+'End Sub
+
+
+
+
+
+Sub Arraybasedsearch(Optional Folderpath As Variant, Optional str As Variant)
+'Application.EnableCancelKey = xlDisabled
+    
+    Dim myArray() As Variant, myArrayPointer As Long
+    Dim uiValue As Variant
+    Dim UIArray As Variant
+    Dim myfolder As String
+    Dim a As Single
+    Dim sht As Worksheet
+    Dim Lrow As Single
+    Dim Folders() As String
+    Dim Folder As Variant
+'Dim myArrayPointer As Long, myArray() As Variant
+'Dim uiValue As Variant
+'Dim UIArray As Variant
+    
+    ReDim Folders(0)
+    
+    
+    ReDim myArray(1 To 1)
+    myArrayPointer = 1
+    
+    
+    Do Until uiValue <> Null
+reenter:
+        
+        uiValue = Application.InputBox("EnterSomething", Type:=2)
+        If uiValue = False Then GoTo endsub
+        If uiValue = "" Then GoTo reenter
+        myArrayPointer = myArrayPointer + 1
+        If myArrayPointer > UBound(myArray) Then
+            
+        End If
+        ReDim Preserve myArray(1 To myArrayPointer - 1)
+        myArray(myArrayPointer - 1) = uiValue
+    Loop
+    
+    If myArrayPointer = 0 Then
+        MsgBox "nothing entered"
+    Else
+        ReDim Preserve myArray(1 To myArrayPointer)
+        
+    End If
+    
+endsub:
+'
+'For UIArray = 1 To UBound(myArray)
+'            Debug.Print (myArray(UIArray))
+'        Next UIArray
+'
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Show
+        myfolder = .SelectedItems(1) & "\"
+    End With
+    
+    
+    For UIArray = 1 To UBound(myArray)
+        str = myArray(UIArray)
+        
+'    If IsMissing(Folderpath) Then
+        With ThisWorkbook
+            Set WS = .Sheets.Add(After:=.Sheets(.Sheets.Count))
+            WS.Name = str
+        End With
+        
+        
+'Str = Application.InputBox(Prompt:="Search string:", Title:="Search all workbooks in a folder", Type:=2)
+'MsgBox myArrayPointer - 1 & " elements entered"
+        WS.Range("A1") = "Search string:"
+        WS.Range("B1") = str
+        WS.Range("A2") = "Path:"
+        WS.Range("B2") = myfolder
+        WS.Range("A3") = "Folderpath"
+        WS.Range("B3") = "Workbook"
+        WS.Range("C3") = "Worksheet"
+        WS.Range("D3") = "Cell Address"
+        WS.Range("E3") = "Link"
+        Folderpath = myfolder
+        Value = Dir(myfolder, &H1F)
+'Else
+        If Right(Folderpath, 2) = "\\" Then
+            Exit Sub
+        End If
+        Value = Dir(Folderpath, &H1F)
+'End If
+        Do Until Value = ""
+            If Value = "." Or Value = ".." Then
+            Else
+                If GetAttr(Folderpath & Value) = 16 Then
+                    Folders(UBound(Folders)) = Value
+                    ReDim Preserve Folders(UBound(Folders) + 1)
+                ElseIf Right(Value, 3) = "xls" Or Right(Value, 4) = "xlsx" Or Right(Value, 4) = "xlsm" Then
+                    On Error Resume Next
+                    Workbooks.Open Filename:=Folderpath & Value 'Password:="zzzzzzzzzzzz"
+                    If Err.Number <> 0 Then
+                        WS.Range("A4").Offset(a, 0).Value = Value
+                        WS.Range("B4").Offset(a, 0).Value = "Password protected"
+                        a = a + 1
+                        On Error GoTo 0
+                    Else
+                        For Each sht In ActiveWorkbook.Worksheets
+'Expand all groups in sheet
+                            sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
+                            Set c = sht.Cells.Find(str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+                            If Not c Is Nothing Then
+                                firstAddress = c.Address
+                                Do
+                                    Lrow = WS.Range("A" & Rows.Count).End(xlUp).Row
+                                    WS.Range("A1").Offset(Lrow, 0).Value = Folderpath
+                                    WS.Range("B1").Offset(Lrow, 0).Value = Value
+                                    WS.Range("C1").Offset(Lrow, 0).Value = sht.Name
+                                    WS.Range("D1").Offset(Lrow, 0).Value = c.Address
+                                    WS.Hyperlinks.Add Anchor:=WS.Range("E1").Offset(Lrow, 0), Address:=Folderpath & Value, SubAddress:= _
+                                    "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
+                                    Set c = sht.Cells.FindNext(c)
+                                Loop While Not c Is Nothing And c.Address <> firstAddress
+                            End If
+                            Next sht
+                        End If
+                        Workbooks(Value).Close False
+                        On Error GoTo 0
+                    End If
+                End If
+                Value = Dir
+            Loop
+'COMMENTING THIS AREA SO AS NOT TO REPEAT FOR ALL SUB FOLDERS
+'For Each Folder In Folders
+'                Arraybasedsearch (Folderpath & Folder & "\")
+'                Next Folder
+'                Cells.EntireColumn.AutoFit
+            
+            Next UIArray
+            
+            
+            
+'MsgBox myArrayPointer - 1 & " elements entered"
+        End Sub
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
