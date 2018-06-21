@@ -15,9 +15,9 @@ Sub uppercase()
 '        Err.Clear
 '    Else
 '    On Error GoTo 0
-            For Each Cell In rng
-                If (Cell.Value <> "") Then
-                    Cell.Value = UCase(Left(Cell.Value, 1)) & Right(Cell.Value, Len(Cell.Value) - 1)
+            For Each cell In rng
+                If (cell.Value <> "") Then
+                    cell.Value = UCase(Left(cell.Value, 1)) & Right(cell.Value, Len(cell.Value) - 1)
                 End If
             Next
             MsgBox "Now running on sheet :" & sh.Name
@@ -28,9 +28,9 @@ Sub uppercase()
     Case Is = 2
         MsgBox ("You have chosen to run on entire sheet.")
         
-        For Each Cell In Application.ActiveSheet.UsedRange
-            If (Cell.Value <> "") Then
-                Cell.Value = UCase(Left(Cell.Value, 1)) & Right(Cell.Value, Len(Cell.Value) - 1)
+        For Each cell In Application.ActiveSheet.UsedRange
+            If (cell.Value <> "") Then
+                cell.Value = UCase(Left(cell.Value, 1)) & Right(cell.Value, Len(cell.Value) - 1)
             End If
         Next
         MsgBox "done!"
@@ -38,9 +38,9 @@ Sub uppercase()
         MsgBox ("You have chosen to run on entire workbook.")
         For Each sh In ActiveWorkbook.Worksheets
         sh.Activate
-        For Each Cell In Application.ActiveSheet.UsedRange
-            If (Cell.Value <> "") Then
-                Cell.Value = UCase(Left(Cell.Value, 1)) & Right(Cell.Value, Len(Cell.Value) - 1)
+        For Each cell In Application.ActiveSheet.UsedRange
+            If (cell.Value <> "") Then
+                cell.Value = UCase(Left(cell.Value, 1)) & Right(cell.Value, Len(cell.Value) - 1)
             End If
         Next
         Next
@@ -78,9 +78,9 @@ End Sub
 
 
 Sub MakeAllTablesRegularRanges()
-  Dim WS As Worksheet, LO As ListObject
-  For Each WS In Worksheets
-    For Each LO In WS.ListObjects
+  Dim Ws As Worksheet, LO As ListObject
+  For Each Ws In Worksheets
+    For Each LO In Ws.ListObjects
       LO.Unlist
     Next
   Next
@@ -91,44 +91,61 @@ Sub UnhideAllSheets()
 
 'Unhide all sheets in workbook.
 
-Dim WS As Worksheet
+Dim Ws As Worksheet
 
-For Each WS In ActiveWorkbook.Worksheets
+For Each Ws In ActiveWorkbook.Worksheets
 
-WS.Visible = xlSheetVisible
+Ws.Visible = xlSheetVisible
 
-Next WS
+Next Ws
 
 End Sub
 
 
 Sub Boombox()
-Dim WS As Worksheet
- Application.ScreenUpdating = False
-For Each WS In Worksheets
-  WS.Activate
-ActiveWindow.DisplayGridlines = False
+Dim Ws As Worksheet
+Dim sh As Worksheet
+Dim rw As Range
+Dim RowCount As Integer
+Application.ScreenUpdating = False
+For Each Ws In Worksheets
+  Ws.Activate
+    ActiveWindow.DisplayGridlines = False
     ActiveWindow.Zoom = 90
     ActiveWindow.View = xlNormalView
     ActiveSheet.DisplayPageBreaks = False
     Range("A1").Select
-  Cells.Select
-  'Cells.EntireColumn.AutoFit
+    Cells.Select
+Cells.EntireColumn.AutoFit
 '    With Selection
 '        .VerticalAlignment = xlTop
 '    End With
     Range("A1").Select
+    On Error Resume Next
+    ActiveSheet.ShowAllData
 Next
  Application.ScreenUpdating = True
+ 
+RowCount = 0
+
+Set sh = ActiveSheet
+    Rows.EntireRow.AutoFit
+    a = sh.UsedRange.Rows
+  For Each looprow In sh.UsedRange.Rows
+  
+    If looprow.RowHeight > 108 Then
+    looprow.RowHeight = 108
+    End If
+    Next
 End Sub
 
 
 
 Sub Propercase()
 
-For Each Cell In Application.ActiveSheet.UsedRange
-    If (Cell.Value <> "") Then
-         Cell.Value = WorksheetFunction.Proper(Cell.Value)
+For Each cell In Application.ActiveSheet.UsedRange
+    If (cell.Value <> "") Then
+         cell.Value = WorksheetFunction.Proper(cell.Value)
     End If
 Next
 MsgBox "done!"
@@ -166,24 +183,24 @@ MakeSubTextBold
  Boombox
 End Sub
 Function MakeSubTextBold()
-  Dim x As Long, Position As Long, Cell As Range
+  Dim x As Long, Position As Long, cell As Range
   Dim msg As String, Txt As String, Parts() As String
-  For Each Cell In Selection
+  For Each cell In Selection
     Position = 0
-    Txt = Cell.Value
+    Txt = cell.Value
     If InStr(Txt, "</B>") Then
       If UBound(Split(Txt, "<B>")) = UBound(Split(Txt, "</B>")) Then
         Txt = Replace(Txt, "</B>", "<B>")
         Parts = Split(Txt, "<B>")
-        Cell.Font.Bold = False
-        Cell.Value = Join(Parts, "")
+        cell.Font.Bold = False
+        cell.Value = Join(Parts, "")
         For x = 1 To UBound(Parts) Step 2
           Position = Position + Len(Parts(x - 1))
-          Cell.Characters(Position, Len(Parts(x))).Font.Bold = True
+          cell.Characters(Position, Len(Parts(x))).Font.Bold = True
           Position = Position + Len(Parts(x))
         Next
       Else
-        msg = msg & Cell.Address(0, 0) & vbLf
+        msg = msg & cell.Address(0, 0) & vbLf
       End If
     End If
   Next
@@ -192,7 +209,7 @@ Function MakeSubTextBold()
 End Function
  
  
-Function \()
+Function FindReplaceAll()
 Dim sht As Worksheet
 Dim fnd As Variant
 Dim rplc As Variant
@@ -201,7 +218,7 @@ fnd = "!"
 rplc = Chr(10)
  
 For Each sht In ActiveWorkbook.Worksheets
-  sht.Cells.Replace what:=fnd, Replacement:=rplc, _
+  sht.Cells.Replace What:=fnd, Replacement:=rplc, _
     LookAt:=xlPart, SearchOrder:=xlByRows, MatchCase:=False, _
     SearchFormat:=False, ReplaceFormat:=False
 Next sht
@@ -818,7 +835,7 @@ i = 0
    Set dest2 = Workbooks.Add
   For Each sh In src1.Sheets
    i = 1 + i
-      sh.Copy after:=dest2.Sheets(i)
+      sh.Copy After:=dest2.Sheets(i)
    Next sh
 
 dest2.Activate
@@ -861,7 +878,7 @@ Sub ImportWorksheets()
    Dim wbSource As Workbook
    Dim wsSource As Worksheet
    Dim FOLDER_PATH As String
-Dim folder As String, pfile As String, ext As String
+Dim Folder As String, pfile As String, ext As String
 
 Set wsTarget = ActiveWorkbook
    'rowTarget = 2
@@ -895,7 +912,7 @@ i = 0
  
   For Each sh In wbSource.Sheets
    i = 1 + i
-      sh.Copy after:=wsTarget.Sheets(i)
+      sh.Copy After:=wsTarget.Sheets(i)
     Next
       'close the source workbook, increment the output row and get the next file
       wbSource.Close SaveChanges:=False
@@ -1113,7 +1130,7 @@ For Each sh In Source.Worksheets
     Selection.Copy
 
     ' create new destination sheet:
-    Set newSheet = Output.Worksheets.Add(after:=Output.Worksheets(Output.Worksheets.Count))
+    Set newSheet = Output.Worksheets.Add(After:=Output.Worksheets(Output.Worksheets.Count))
     newSheet.Name = sh.Name
 
     ' make sure the destination sheet is selected with the right cell:
@@ -1156,7 +1173,7 @@ Sub Consolidate_all_sheets()
     Dim hashedvalues() As Variant
     Dim splitvalues() As String
     Dim arrforsort As Variant
-    Dim arr As New Collection, A
+    Dim arr As New Collection, a
     Dim f As Long
     Dim deduplicated As String
     Dim checkSheetName As String
@@ -1257,5 +1274,550 @@ Sub TestSheetCreate()
         "''exist in this workbook.", vbInformation, "Kutools for Excel"
     End If
 End Sub
+Sub FindMultiple()
+
+Const FilePath = "D:\Akash\Round 2\Personal\" 'Your folder name goes here - you must include the final slash
+Const FileMask = "*.xl*" 'Adjust as appropriate
+Const SearchString = "List.txt" 'Again, adjust this to suit
+
+Dim CurrFile
+Dim WBLoop As Workbook
+Dim shLoop As Worksheet
+Dim FindText As Range, FirstMatch
+Dim CountFinds As Long
+
+Application.DisplayAlerts = False
+
+CountFinds = 0
+
+CurrFile = Dir(FilePath & FileMask)
+
+While CurrFile <> ""
+WBLoop = Workbooks.Open(FilePath & CurrFile)
+For Each shLoop In WBLoop.Sheets
+Set FindText = shLoop.Cells.Find(SearchString, LookIn:=xlValues, LookAt:=xlWhole)
+If Not FindText Is Nothing Then
+FirstMatch = FindText.Address
+While Not FindText Is Nothing
+CountFinds = CountFinds + 1
+Set FindText = shLoops.Cells.FindNext(FindText)
+If FindText.Address = FirstMatch Then
+Set FindText = Nothing
+End If
+Wend
+End If
+Next shLoop
+WBLoop.Close
+CurrFile = Dir
+Wend
+End Sub
 
 
+Public Ws As Worksheet
+ 
+Sub SearchWKBooksSubFolders(Optional Folderpath As Variant, Optional Str As Variant)
+Dim myfolder As String
+Dim a As Single
+Dim sht As Worksheet
+Dim lrow As Single
+Dim Folders() As String
+Dim Folder As Variant
+ReDim Folders(0)
+ 
+If IsMissing(Folderpath) Then
+    Set Ws = Sheets.Add
+ 
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Show
+        myfolder = .SelectedItems(1) & "\"
+    End With
+     
+    Str = Application.InputBox(Prompt:="Search string:", Title:="Search all workbooks in a folder", Type:=2)
+     
+    If Str = "" Then Exit Sub
+     
+    Ws.Range("A1") = "Search string:"
+    Ws.Range("B1") = Str
+    Ws.Range("A2") = "Path:"
+    Ws.Range("B2") = myfolder
+    Ws.Range("A3") = "Folderpath"
+    Ws.Range("B3") = "Workbook"
+    Ws.Range("C3") = "Worksheet"
+    Ws.Range("D3") = "Cell Address"
+    Ws.Range("E3") = "Link"
+     
+    Folderpath = myfolder
+     
+    Value = Dir(myfolder, &H1F)
+     
+Else
+    If Right(Folderpath, 2) = "\\" Then
+        Exit Sub
+    End If
+    Value = Dir(Folderpath, &H1F)
+End If
+ 
+ 
+Do Until Value = ""
+    If Value = "." Or Value = ".." Then
+    Else
+        If GetAttr(Folderpath & Value) = 16 Then
+            Folders(UBound(Folders)) = Value
+            ReDim Preserve Folders(UBound(Folders) + 1)
+             
+        ElseIf Right(Value, 3) = "xls" Or Right(Value, 4) = "xlsx" Or Right(Value, 4) = "xlsm" Then
+            On Error Resume Next
+            Workbooks.Open FileName:=Folderpath & Value, Password:="zzzzzzzzzzzz"
+            If Err.number <> 0 Then
+                Ws.Range("A4").Offset(a, 0).Value = Value
+                Ws.Range("B4").Offset(a, 0).Value = "Password protected"
+                a = a + 1
+                On Error GoTo 0
+            Else
+                For Each sht In ActiveWorkbook.Worksheets
+                        'Expand all groups in sheet
+                    sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
+                        Set c = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+                        If Not c Is Nothing Then
+                            firstAddress = c.Address
+                            Do
+                                lrow = Ws.Range("A" & Rows.Count).End(xlUp).Row
+                                Ws.Range("A1").Offset(lrow, 0).Value = Folderpath
+                                Ws.Range("B1").Offset(lrow, 0).Value = Value
+                                Ws.Range("C1").Offset(lrow, 0).Value = sht.Name
+                                Ws.Range("D1").Offset(lrow, 0).Value = c.Address
+                                Ws.Hyperlinks.Add Anchor:=Ws.Range("E1").Offset(lrow, 0), Address:=Folderpath & Value, SubAddress:= _
+                                "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
+                                Set c = sht.Cells.FindNext(c)
+                            Loop While Not c Is Nothing And c.Address <> firstAddress
+                        End If
+                Next sht
+            End If
+            Workbooks(Value).Close False
+            On Error GoTo 0
+        End If
+    End If
+    Value = Dir
+Loop
+For Each Folder In Folders
+    SearchWKBooksSubFolders (Folderpath & Folder & "\")
+Next Folder
+Cells.EntireColumn.AutoFit
+End Sub
+'Public WS As Worksheet
+ 
+Sub SearhWK(Optional Folderpath As Variant, Optional Str As Variant)
+Dim myfolder As String
+Dim a As Single
+Dim sht As Worksheet
+Dim lrow As Single
+Dim Folders() As String
+Dim Folder As Variant
+ReDim Folders(0)
+ 
+If IsMissing(Folderpath) Then
+    Set Ws = Sheets.Add
+ 
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Show
+        myfolder = .SelectedItems(1) & "\"
+    End With
+     
+    Str = Application.InputBox(Prompt:="Search string:", Title:="Search all workbooks in a folder", Type:=2)
+     
+    If Str = "" Then Exit Sub
+    
+    Ws.Range("A1") = "Search string:"
+    Ws.Range("B1") = Str
+    Ws.Range("A2") = "Path:"
+    Ws.Range("B2") = myfolder
+    Ws.Range("A3") = "Folderpath"
+    Ws.Range("B3") = "Workbook"
+    Ws.Range("C3") = "Worksheet"
+    Ws.Range("D3") = "Cell Address"
+    Ws.Range("E3") = "Link"
+     
+    Folderpath = myfolder
+     
+    Value = Dir(myfolder, &H1F)
+     
+Else
+    If Right(Folderpath, 2) = "\\" Then
+        Exit Sub
+    End If
+    Value = Dir(Folderpath, &H1F)
+End If
+ 
+ 
+Do Until Value = ""
+    If Value = "." Or Value = ".." Then
+    Else
+        If GetAttr(Folderpath & Value) = 16 Then
+            Folders(UBound(Folders)) = Value
+            ReDim Preserve Folders(UBound(Folders) + 1)
+             
+        ElseIf Right(Value, 3) = "xls" Or Right(Value, 4) = "xlsx" Or Right(Value, 4) = "xlsm" Then
+            On Error Resume Next
+            Workbooks.Open FileName:=Folderpath & Value, Password:="zzzzzzzzzzzz"
+            If Err.number <> 0 Then
+                Ws.Range("A4").Offset(a, 0).Value = Value
+                Ws.Range("B4").Offset(a, 0).Value = "Password protected"
+                a = a + 1
+                On Error GoTo 0
+            Else
+                For Each sht In ActiveWorkbook.Worksheets
+                        'Expand all groups in sheet
+                    sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
+                        Set c = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+                        If Not c Is Nothing Then
+                            firstAddress = c.Address
+                            Do
+                                lrow = Ws.Range("A" & Rows.Count).End(xlUp).Row
+                                Ws.Range("A1").Offset(lrow, 0).Value = Folderpath
+                                Ws.Range("B1").Offset(lrow, 0).Value = Value
+                                Ws.Range("C1").Offset(lrow, 0).Value = sht.Name
+                                Ws.Range("D1").Offset(lrow, 0).Value = c.Address
+                                Ws.Hyperlinks.Add Anchor:=Ws.Range("E1").Offset(lrow, 0), Address:=Folderpath & Value, SubAddress:= _
+                                "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
+                                Set c = sht.Cells.FindNext(c)
+                            Loop While Not c Is Nothing And c.Address <> firstAddress
+                        End If
+                Next sht
+            End If
+            Workbooks(Value).Close False
+            On Error GoTo 0
+        End If
+    End If
+    Value = Dir
+Loop
+For Each Folder In Folders
+    SearhWK (Folderpath & Folder & "\")
+Next Folder
+Cells.EntireColumn.AutoFit
+End Sub
+Sub ArrayFromUI()
+
+Dim myarray() As Variant, myArrayPointer As Long
+Dim uiValue As Variant
+Dim UIArray As Variant
+
+ReDim myarray(1 To 1)
+myArrayPointer = 1
+
+'uiValue = Application.InputBox("EnterSomething", Type:=1)
+'ReDim Preserve myArray(1 To myArrayPointer)
+'
+'myArray(myArrayPointer) = uiValue
+'myArrayPointer = myArrayPointer + 1
+
+Do Until uiValue <> Null
+reenter:
+uiValue = Application.InputBox("EnterSomething", Type:=2)
+If uiValue = False Then GoTo endsub
+If uiValue = "" Then GoTo reenter
+
+myArrayPointer = myArrayPointer + 1
+If myArrayPointer > UBound(myarray) Then
+ReDim Preserve myarray(1 To myArrayPointer)
+End If
+
+myarray(myArrayPointer - 1) = uiValue
+
+'If uiValue <> False Then
+'myArrayPointer = myArrayPointer + 1
+'End If
+
+Loop
+
+If myArrayPointer = 0 Then
+MsgBox "nothing entered"
+Else
+ReDim Preserve myarray(1 To myArrayPointer)
+
+End If
+
+endsub:
+
+For UIArray = 1 To UBound(myarray)
+            Debug.Print (myarray(UIArray))
+        Next UIArray
+        
+'MsgBox myArrayPointer - 1 & " elements entered"
+End Sub
+
+
+
+Sub SearchWK(Optional Folderpath As Variant, Optional Str As Variant)
+Dim myfolder As String
+Dim a As Single
+Dim sht As Worksheet
+Dim lrow As Single
+Dim Folders() As String
+Dim Folder As Variant
+     Dim myarray() As Variant, myArrayPointer As Long
+Dim uiValue As Variant
+Dim UIArray As Variant
+
+ReDim Folders(0)
+ 
+If IsMissing(Folderpath) Then
+    Set Ws = Sheets.Add
+ 
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Show
+        myfolder = .SelectedItems(1) & "\"
+    End With
+     
+    'Str = Application.InputBox(Prompt:="Search string:", Title:="Search all workbooks in a folder", Type:=2)
+     
+
+                        ReDim myarray(1 To 1)
+                        myArrayPointer = 1
+                        
+                        'uiValue = Application.InputBox("EnterSomething", Type:=1)
+                        'ReDim Preserve myArray(1 To myArrayPointer)
+                        '
+                        'myArray(myArrayPointer) = uiValue
+                        'myArrayPointer = myArrayPointer + 1
+                        
+                        Do Until uiValue <> Null
+reenter:
+                        uiValue = Application.InputBox("EnterSomething", Type:=2)
+                        If uiValue = False Then GoTo endsub
+                        If uiValue = "" Then GoTo reenter
+                        
+                        myArrayPointer = myArrayPointer + 1
+                        If myArrayPointer > UBound(myarray) Then
+                        ReDim Preserve myarray(1 To myArrayPointer)
+                        End If
+                        
+                        myarray(myArrayPointer - 1) = uiValue
+                        
+                        'If uiValue <> False Then
+                        'myArrayPointer = myArrayPointer + 1
+                        'End If
+                        
+                        Loop
+                        
+                        If myArrayPointer = 0 Then
+                        MsgBox "nothing entered"
+                        Else
+                        ReDim Preserve myarray(1 To myArrayPointer)
+                        
+                        End If
+                        
+endsub:
+'MsgBox myArrayPointer - 1 & " elements entered"
+
+
+For UIArray = 1 To UBound(myarray)
+     Str = myarray(UIArray)
+     With Ws
+      Ws = .Sheets.Add(After:=.Sheets(.Sheets.Count))
+        Ws.Name = Str
+    End With
+    
+If Str = "" Then Exit Sub
+    
+    Ws.Range("A1") = "Search string:"
+    Ws.Range("B1") = Str
+    Ws.Range("A2") = "Path:"
+    Ws.Range("B2") = myfolder
+    Ws.Range("A3") = "Folderpath"
+    Ws.Range("B3") = "Workbook"
+    Ws.Range("C3") = "Worksheet"
+    Ws.Range("D3") = "Cell Address"
+    Ws.Range("E3") = "Link"
+     
+    Folderpath = myfolder
+     
+    Value = Dir(myfolder, &H1F)
+     
+Else
+    If Right(Folderpath, 2) = "\\" Then
+        Exit Sub
+    End If
+    Value = Dir(Folderpath, &H1F)
+End If
+ 
+ 
+Do Until Value = ""
+    If Value = "." Or Value = ".." Then
+    Else
+        If GetAttr(Folderpath & Value) = 16 Then
+            Folders(UBound(Folders)) = Value
+            ReDim Preserve Folders(UBound(Folders) + 1)
+             
+        ElseIf Right(Value, 3) = "xls" Or Right(Value, 4) = "xlsx" Or Right(Value, 4) = "xlsm" Then
+            On Error Resume Next
+            Workbooks.Open FileName:=Folderpath & Value, Password:="zzzzzzzzzzzz"
+            If Err.number <> 0 Then
+                Ws.Range("A4").Offset(a, 0).Value = Value
+                Ws.Range("B4").Offset(a, 0).Value = "Password protected"
+                a = a + 1
+                On Error GoTo 0
+            Else
+                For Each sht In ActiveWorkbook.Worksheets
+                        'Expand all groups in sheet
+                    sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
+                        Set c = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+                        If Not c Is Nothing Then
+                            firstAddress = c.Address
+                            Do
+                                lrow = Ws.Range("A" & Rows.Count).End(xlUp).Row
+                                Ws.Range("A1").Offset(lrow, 0).Value = Folderpath
+                                Ws.Range("B1").Offset(lrow, 0).Value = Value
+                                Ws.Range("C1").Offset(lrow, 0).Value = sht.Name
+                                Ws.Range("D1").Offset(lrow, 0).Value = c.Address
+                                Ws.Hyperlinks.Add Anchor:=Ws.Range("E1").Offset(lrow, 0), Address:=Folderpath & Value, SubAddress:= _
+                                "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
+                                Set c = sht.Cells.FindNext(c)
+                            Loop While Not c Is Nothing And c.Address <> firstAddress
+                        End If
+                Next sht
+            End If
+            Workbooks(Value).Close False
+            On Error GoTo 0
+        End If
+    End If
+    Value = Dir
+Loop
+For Each Folder In Folders
+    SearchWK (Folderpath & Folder & "\")
+Next Folder
+Cells.EntireColumn.AutoFit
+
+
+Next UIArray
+
+End Sub
+
+
+
+
+Sub trimall()
+Dim cell As Range
+For Each cell In ActiveSheet.UsedRange.SpecialCells(xlCellTypeConstants)
+cell = WorksheetFunction.Trim(cell)
+Next cell
+
+End Sub
+
+
+Sub list_to_fileNames()
+Dim lrow As Variant
+lrow = Cells(Cells.Rows.Count, "A").End(xlUp).Row
+Cells(2, 2).Value = "=Right(A2, Len(A2) - Search(""^^"", Substitute(A2, ""\"", ""^^"", Len(A2) - Len(Substitute(A2, ""\"", """")))))"
+Range("b2:b" & lrow).FillDown
+Columns("B:B").Select
+    Selection.Cut
+    Range("A1").Select
+    Selection.Insert Shift:=xlToRight
+    Range("A2").Select
+    Columns("A:A").EntireColumn.AutoFit
+    Columns("B:B").ColumnWidth = 62.86
+     Selection.AutoFilter
+End Sub
+
+Sub ReplaceHyperlinks()
+Dim Ws As Worksheet
+Dim xHyperlink As Hyperlink
+Dim xOld As String, xNew As String
+For Each Ws In Worksheets
+  Ws.Activate
+Set Ws = Application.ActiveSheet
+xOld = Application.InputBox("Old text:", xTitleId, "", Type:=2)
+xNew = Application.InputBox("New text:", xTitleId, "", Type:=2)
+Application.ScreenUpdating = False
+For Each xHyperlink In Ws.Hyperlinks
+    xHyperlink.Address = Replace(xHyperlink.Address, xOld, xNew)
+Next
+Next
+Application.ScreenUpdating = True
+MsgBox done
+End Sub
+
+
+Sub splithashhash()
+Dim fullarray As Variant
+Dim myarray As Variant
+Dim mystr As String
+Dim r, t As Range
+Dim lookuprange As Range
+''r = ActiveSheet.Range("A1:A4")
+Set t = ActiveSheet.Range("c1")
+lrow = Cells(Cells.Rows.Count, "A").End(xlUp).Row
+Dim c As Variant
+mycol = t.Column
+myrow = t.Row
+
+Dim i As Integer
+
+i = 0
+'Set lookuprange = Range(ActiveSheet.Range("j1"))
+
+For Each c In Range("A1:A" & lrow)
+i = i + 1
+    myarray = Split(c.Value2, "##")
+    For Each d In myarray
+        ActiveSheet.Cells(myrow, mycol).Select
+        mystr = Application.WorksheetFunction.Trim(d)
+        Selection.Value = mystr
+        ActiveSheet.Cells(myrow, mycol + 1) = ActiveSheet.Cells(i, 1).Value2
+        myrow = myrow + 1
+        
+    Next
+Next
+
+''For Each d In Range(TextBox1.Value)
+
+
+'Dim fullarray As Variant
+'Dim myarray As Variant
+'Dim mystr As String
+'Dim r, t As Range
+'Dim c As Variant
+'Dim lrow As Variant
+'Dim lookuprange As Range
+'''r = ActiveSheet.Range("A1:A4")
+'Set t = ActiveSheet.Range("c1")
+'
+'
+'lrow = Cells(Cells.Rows.Count, "A").End(xlUp).Row
+'
+'mycol = t.Column
+'myrow = t.Row
+'Set lookuprange = Range(ActiveSheet.Range("j1"))
+'
+'For Each c In Range("A1:A" & lrow)
+'    myarray = Split(c.Value2, "##")
+'    For Each d In myarray
+'        ActiveSheet.Cells(myrow, mycol).Select
+'        mystr = Application.WorksheetFunction.Trim(d)
+'        Selection.Value = mystr
+'        lookuprange.Select
+'        Set b = Selection.Find(What:=mystr, After:=ActiveCell, LookIn:=xlValues, LookAt:= _
+'        xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext, MatchCase:=True, _
+'        SearchFormat:=False)
+'        If b Is Nothing Then
+'            ActiveSheet.Cells(myrow, mycol + 1) = False
+'        Else
+'            ActiveSheet.Cells(myrow, mycol + 1) = True
+'        End If
+'        myrow = myrow + 1
+'
+'    Next
+'Next
+'''For Each d In Range(TextBox1.Value)
+
+End Sub
+
+
+Sub loopthrough()
+Dim sh As Worksheet
+        On Error Resume Next
+           
+        For Each sh In Worksheets
+        
+        Next
+End Sub
