@@ -18,12 +18,12 @@ Select Case control.ID
   Case "bButton01": MakeVisible = True
   Case "bButton02": MakeVisible = True
   Case "bButton03": MakeVisible = True
-  Case "bButton04": MakeVisible = False
-  Case "bButton05": MakeVisible = False
-  Case "bButton06": MakeVisible = False
-  Case "bButton07": MakeVisible = False
-  Case "bButton08": MakeVisible = False
-  Case "bButton09": MakeVisible = False
+  Case "bButton04": MakeVisible = True
+  Case "bButton05": MakeVisible = True
+  Case "bButton06": MakeVisible = True
+  Case "bButton07": MakeVisible = True
+  Case "bButton08": MakeVisible = True
+  Case "bButton09": MakeVisible = True
   Case "bButton10": MakeVisible = False
   
   Case "GroupC": MakeVisible = False
@@ -101,12 +101,12 @@ Select Case control.ID
   Case "bButton01": Labeling = "CopyEntireWorbook"
   Case "bButton02": Labeling = "ImportWorksheets"
   Case "bButton03": Labeling = "ClearExcessRowsAndColumns"
-  Case "bButton04": Labeling = "Button"
-  Case "bButton05": Labeling = "Button"
-  Case "bButton06": Labeling = "Button"
-  Case "bButton07": Labeling = "Button"
-  Case "bButton08": Labeling = "Button"
-  Case "bButton09": Labeling = "Button"
+  Case "bButton04": Labeling = "FindReplaceAll !"
+  Case "bButton05": Labeling = "Consolidate_all_sheets"
+  Case "bButton06": Labeling = "Trim All"
+  Case "bButton07": Labeling = "List to filename"
+  Case "bButton08": Labeling = "ReplaceHyperlinks"
+  Case "bButton09": Labeling = "SplithashashToCandD"
   Case "bButton10": Labeling = "Button"
   
   Case "GroupC": Labeling = "Group Name"
@@ -181,12 +181,12 @@ Select Case control.ID
   Case "bButton01": RibbonImage = "Spade"
   Case "bButton02": RibbonImage = "Spade"
   Case "bButton03": RibbonImage = "Spade"
-  Case "bButton04": RibbonImage = "ObjectPictureFill"
-  Case "bButton05": RibbonImage = "ObjectPictureFill"
-  Case "bButton06": RibbonImage = "ObjectPictureFill"
-  Case "bButton07": RibbonImage = "ObjectPictureFill"
-  Case "bButton08": RibbonImage = "ObjectPictureFill"
-  Case "bButton09": RibbonImage = "ObjectPictureFill"
+  Case "bButton04": RibbonImage = "Heart"
+  Case "bButton05": RibbonImage = "Spade"
+  Case "bButton06": RibbonImage = "Heart"
+  Case "bButton07": RibbonImage = "Heart"
+  Case "bButton08": RibbonImage = "Spade"
+  Case "bButton09": RibbonImage = "Heart"
   Case "bButton10": RibbonImage = "ObjectPictureFill"
   
   Case "cButton01": RibbonImage = "ObjectPictureFill"
@@ -334,12 +334,12 @@ Select Case control.ID
   Case "bButton01": Application.Run "Copytoanother"
   Case "bButton02": Application.Run "ImportWorksheets"
   Case "bButton03": Application.Run "ClearExcessRowsAndColumns"
-  Case "bButton04": Application.Run "DummyMacro"
-  Case "bButton05": Application.Run "DummyMacro"
-  Case "bButton06": Application.Run "DummyMacro"
-  Case "bButton07": Application.Run "DummyMacro"
-  Case "bButton08": Application.Run "DummyMacro"
-  Case "bButton09": Application.Run "DummyMacro"
+  Case "bButton04": Application.Run "FindReplaceAll"
+  Case "bButton05": Application.Run "Consolidate_all_sheets"
+  Case "bButton06": Application.Run "TrimAll"
+  Case "bButton07": Application.Run "list_to_fileNames"
+  Case "bButton08": Application.Run "ReplaceHyperlinks"
+  Case "bButton09": Application.Run "splithashhash"
   Case "bButton10": Application.Run "DummyMacro"
   
   Case "cButton01": Application.Run "DummyMacro"
@@ -408,10 +408,10 @@ Select Case control.ID
   
   Case "bButton01": Screentip = "Copy any workbook to another in a different place (permission will not be copied)"
   Case "bButton02": Screentip = "Import all worksheets from specified folder"
-  Case "bButton03": Screentip = "Description"
-  Case "bButton04": Screentip = "Description"
-  Case "bButton05": Screentip = "Description"
-  Case "bButton06": Screentip = "Description"
+  Case "bButton03": Screentip = "Replace all ! with new line characters"
+  Case "bButton04": Screentip = "Trim All cells"
+  Case "bButton05": Screentip = "convert list from portable to fileNames"
+  Case "bButton06": Screentip = "ReplaceHyperlinks"
   Case "bButton07": Screentip = "Description"
   Case "bButton08": Screentip = "Description"
   Case "bButton09": Screentip = "Description"
