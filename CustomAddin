@@ -54,11 +54,11 @@ Sub Clean_and_Trim_Cells()
     Application.ScreenUpdating = False
     Application.Calculation = xlCalculationManual
     Dim s As String
-    For Each c In ActiveSheet.UsedRange
-        s = c.Value
+    For Each C In ActiveSheet.UsedRange
+        s = C.Value
         If Trim(Application.Clean(s)) <> s Then
             s = Trim(Application.Clean(s))
-            c.Value = s
+            C.Value = s
         End If
     Next
     Application.ScreenUpdating = True
@@ -115,14 +115,14 @@ For Each Ws In Worksheets
     ActiveWindow.View = xlNormalView
     ActiveSheet.DisplayPageBreaks = False
     Range("A1").Select
-    Cells.Select
-Cells.EntireColumn.AutoFit
+   ' Cells.Select
+'Cells.EntireColumn.AutoFit
 '    With Selection
 '        .VerticalAlignment = xlTop
 '    End With
-    Range("A1").Select
+    'Range("A1").Select
     On Error Resume Next
-    ActiveSheet.ShowAllData
+    'ActiveSheet.ShowAllData
 Next
  Application.ScreenUpdating = True
  
@@ -155,7 +155,7 @@ End Sub
  
 Sub Correcting()
   Dim s As String
-  Dim r As Range, c As Range
+  Dim r As Range, C As Range
   Dim re As Object, mc As Object, m As Object
   Dim i As Long
 Dim sht As Worksheet
@@ -227,7 +227,7 @@ End Function
 
 Sub BoldTextString()
   Dim s As String
-  Dim r As Range, c As Range
+  Dim r As Range, C As Range
   Dim re As Object, mc As Object, m As Object
   Dim i As Long
  
@@ -236,18 +236,18 @@ Set re = CreateObject("vbscript.regexp")
     re.Global = True
     re.ignorecase = True
   
-For Each c In r
+For Each C In r
     re.Pattern = "<B>[\s\S]+?</B>"
-        Set mc = re.Execute(c.Text)
+        Set mc = re.Execute(C.Text)
     re.Pattern = "</?B>"
-   c.Value = re.Replace(c.Text, "")
+   C.Value = re.Replace(C.Text, "")
     i = 0
     For Each m In mc
-        c.Characters(m.firstindex + 1 - 7 * i, _
+        C.Characters(m.firstindex + 1 - 7 * i, _
             m.Length - 3).Font.Bold = True
         i = i + 1
     Next m
-Next c
+Next C
 End Sub
  
 Sub Macro2()
@@ -852,13 +852,13 @@ End Sub
 
 Public Function ClarkeyCat(ByRef rng As Range) As Variant
 
-Dim c As Range
+Dim C As Range
 Dim ans As Variant
 
-For Each c In rng
+For Each C In rng
 
-If (c.Value <> "") Then
-    ans = IIf(ans = "", "##", ans & "##") & c.Value
+If (C.Value <> "") Then
+    ans = IIf(ans = "", "##", ans & "##") & C.Value
 End If
 
 Next
@@ -964,7 +964,7 @@ NextCode:
 End Function
 
 Sub ClearExcessRowsAndColumns()
-    Dim ar As Range, r As Long, c As Long, tr As Long, tc As Long, x As Range
+    Dim ar As Range, r As Long, C As Long, tr As Long, tc As Long, x As Range
     Dim wksWks As Worksheet, ur As Range, arCount As Integer, i As Integer
     Dim blProtCont As Boolean, blProtScen As Boolean, blProtDO As Boolean
     Dim shp As Shape
@@ -989,7 +989,7 @@ Sub ClearExcessRowsAndColumns()
             Application.StatusBar = "Checking " & wksWks.Name & _
                                     ", Please Wait..."
             r = 0
-            c = 0
+            C = 0
 
             'Determine if the sheet contains both formulas and constants
             Set ur = Union(wksWks.UsedRange.SpecialCells(xlCellTypeConstants), _
@@ -1038,7 +1038,7 @@ Sub ClearExcessRowsAndColumns()
                     i = i + 1
                     tr = ar.Range("A1").Row + ar.Rows.Count - 1
                     tc = ar.Range("A1").Column + ar.Columns.Count - 1
-                    If tc > c Then c = tc
+                    If tc > C Then C = tc
                     If tr > r Then r = tr
                 Next
                 'Determine the area covered by shapes
@@ -1046,7 +1046,7 @@ Sub ClearExcessRowsAndColumns()
                 For Each shp In wksWks.Shapes
                     tr = shp.BottomRightCell.Row
                     tc = shp.BottomRightCell.Column
-                    If tc > c Then c = tc
+                    If tc > C Then C = tc
                     If tr > r Then r = tr
                 Next
                 Application.StatusBar = "Clearing Excess Cells in " & _
@@ -1071,8 +1071,8 @@ Sub ClearExcessRowsAndColumns()
                         ur.Delete
                     End If
                 End If
-                If c < wksWks.Columns.Count And c < wksWks.Cells.SpecialCells(xlCellTypeLastCell).Column Then
-                    Set ur = wksWks.Range(wksWks.Cells(1, c + 1), _
+                If C < wksWks.Columns.Count And C < wksWks.Cells.SpecialCells(xlCellTypeLastCell).Column Then
+                    Set ur = wksWks.Range(wksWks.Cells(1, C + 1), _
                                           wksWks.Cells(1, wksWks.Cells.SpecialCells(xlCellTypeLastCell).Column)).EntireColumn
                     ur.EntireColumn.Hidden = False
                     ur.ColumnWidth = 18
@@ -1377,19 +1377,19 @@ Do Until Value = ""
                 For Each sht In ActiveWorkbook.Worksheets
                         'Expand all groups in sheet
                     sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
-                        Set c = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext)
-                        If Not c Is Nothing Then
-                            firstAddress = c.Address
+                        Set C = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlWhole, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+                        If Not C Is Nothing Then
+                            firstAddress = C.Address
                             Do
                                 lrow = Ws.Range("A" & Rows.Count).End(xlUp).Row
                                 Ws.Range("A1").Offset(lrow, 0).Value = Folderpath
                                 Ws.Range("B1").Offset(lrow, 0).Value = Value
                                 Ws.Range("C1").Offset(lrow, 0).Value = sht.Name
-                                Ws.Range("D1").Offset(lrow, 0).Value = c.Address
+                                Ws.Range("D1").Offset(lrow, 0).Value = C.Address
                                 Ws.Hyperlinks.Add Anchor:=Ws.Range("E1").Offset(lrow, 0), Address:=Folderpath & Value, SubAddress:= _
-                                "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
-                                Set c = sht.Cells.FindNext(c)
-                            Loop While Not c Is Nothing And c.Address <> firstAddress
+                                "'" & sht.Name & "'" & "!" & C.Address, TextToDisplay:="Link"
+                                Set C = sht.Cells.FindNext(C)
+                            Loop While Not C Is Nothing And C.Address <> firstAddress
                         End If
                 Next sht
             End If
@@ -1468,19 +1468,19 @@ Do Until Value = ""
                 For Each sht In ActiveWorkbook.Worksheets
                         'Expand all groups in sheet
                     sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
-                        Set c = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
-                        If Not c Is Nothing Then
-                            firstAddress = c.Address
+                        Set C = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+                        If Not C Is Nothing Then
+                            firstAddress = C.Address
                             Do
                                 lrow = Ws.Range("A" & Rows.Count).End(xlUp).Row
                                 Ws.Range("A1").Offset(lrow, 0).Value = Folderpath
                                 Ws.Range("B1").Offset(lrow, 0).Value = Value
                                 Ws.Range("C1").Offset(lrow, 0).Value = sht.Name
-                                Ws.Range("D1").Offset(lrow, 0).Value = c.Address
+                                Ws.Range("D1").Offset(lrow, 0).Value = C.Address
                                 Ws.Hyperlinks.Add Anchor:=Ws.Range("E1").Offset(lrow, 0), Address:=Folderpath & Value, SubAddress:= _
-                                "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
-                                Set c = sht.Cells.FindNext(c)
-                            Loop While Not c Is Nothing And c.Address <> firstAddress
+                                "'" & sht.Name & "'" & "!" & C.Address, TextToDisplay:="Link"
+                                Set C = sht.Cells.FindNext(C)
+                            Loop While Not C Is Nothing And C.Address <> firstAddress
                         End If
                 Next sht
             End If
@@ -1660,19 +1660,19 @@ Do Until Value = ""
                 For Each sht In ActiveWorkbook.Worksheets
                         'Expand all groups in sheet
                     sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
-                        Set c = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
-                        If Not c Is Nothing Then
-                            firstAddress = c.Address
+                        Set C = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+                        If Not C Is Nothing Then
+                            firstAddress = C.Address
                             Do
                                 lrow = Ws.Range("A" & Rows.Count).End(xlUp).Row
                                 Ws.Range("A1").Offset(lrow, 0).Value = Folderpath
                                 Ws.Range("B1").Offset(lrow, 0).Value = Value
                                 Ws.Range("C1").Offset(lrow, 0).Value = sht.Name
-                                Ws.Range("D1").Offset(lrow, 0).Value = c.Address
+                                Ws.Range("D1").Offset(lrow, 0).Value = C.Address
                                 Ws.Hyperlinks.Add Anchor:=Ws.Range("E1").Offset(lrow, 0), Address:=Folderpath & Value, SubAddress:= _
-                                "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
-                                Set c = sht.Cells.FindNext(c)
-                            Loop While Not c Is Nothing And c.Address <> firstAddress
+                                "'" & sht.Name & "'" & "!" & C.Address, TextToDisplay:="Link"
+                                Set C = sht.Cells.FindNext(C)
+                            Loop While Not C Is Nothing And C.Address <> firstAddress
                         End If
                 Next sht
             End If
@@ -1722,16 +1722,22 @@ End Sub
 Sub ReplaceHyperlinks()
 Dim Ws As Worksheet
 Dim xHyperlink As Hyperlink
-Dim xOld As String, xNew As String
+Dim xOld As String, xNew As Variant
 For Each Ws In Worksheets
   Ws.Activate
 Set Ws = Application.ActiveSheet
-xOld = Application.InputBox("Old text:", xTitleId, "", Type:=2)
-xNew = Application.InputBox("New text:", xTitleId, "", Type:=2)
-Application.ScreenUpdating = False
+'Ws.Name
+
+xNew = Ws.Name
+'Application.ScreenUpdating = False
 For Each xHyperlink In Ws.Hyperlinks
-    xHyperlink.Address = Replace(xHyperlink.Address, xOld, xNew)
-Next
+  xOld = Right(xHyperlink.SubAddress, Len(xHyperlink.SubAddress) - InStr(xHyperlink.SubAddress, "!"))
+  'MsgBox xHyperlink.SubAddress
+'  MsgBox xOld
+'  MsgBox xNew
+ xHyperlink.SubAddress = Chr(39) & xNew & Chr(39) & "!" & xOld
+ 'MsgBox xHyperlink.SubAddress
+    Next
 Next
 Application.ScreenUpdating = True
 MsgBox done
@@ -1747,7 +1753,7 @@ Dim lookuprange As Range
 ''r = ActiveSheet.Range("A1:A4")
 Set t = ActiveSheet.Range("c1")
 lrow = Cells(Cells.Rows.Count, "A").End(xlUp).Row
-Dim c As Variant
+Dim C As Variant
 mycol = t.Column
 myrow = t.Row
 
@@ -1756,9 +1762,9 @@ Dim i As Integer
 i = 0
 'Set lookuprange = Range(ActiveSheet.Range("j1"))
 
-For Each c In Range("A1:A" & lrow)
+For Each C In Range("A1:A" & lrow)
 i = i + 1
-    myarray = Split(c.Value2, "##")
+    myarray = Split(C.Value2, "##")
     For Each d In myarray
         ActiveSheet.Cells(myrow, mycol).Select
         mystr = Application.WorksheetFunction.Trim(d)
@@ -1821,3 +1827,36 @@ Dim sh As Worksheet
         
         Next
 End Sub
+Sub pastevaluesonly()
+Dim Ws As Worksheet
+
+For Each Ws In ActiveWorkbook.Worksheets
+
+Ws.Activate
+Cells.Select
+Selection.Copy
+ActiveSheet.Range("a1").PasteSpecial Paste:=xlPasteValuesAndNumberFormats, _
+                 Operation:=xlNone, SkipBlanks:=False, Transpose:=False
+Next Ws
+End Sub
+
+Sub Delete_Empty_Columns()
+
+Dim C As Integer
+
+C = ActiveSheet.Cells.SpecialCells(xlLastCell).Column
+
+Do Until C = 0
+
+If WorksheetFunction.CountA(Columns(C)) = 0 Then
+
+Columns(C).Delete
+
+End If
+
+C = C - 1
+
+Loop
+
+End Sub
+
