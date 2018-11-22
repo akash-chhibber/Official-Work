@@ -1,0 +1,18 @@
+Sub Filter()
+Clearfilter
+ ActiveSheet.Range("$A$4:$G$29").AutoFilter Field:=7, Criteria1:="="
+End Sub
+Sub Clearfilter()
+
+    Selection.AutoFilter
+End Sub
+Sub FilterDueToday()
+
+    Range("A4:H4").Select
+   Selection.AutoFilter
+    Range("F4").Select
+    ActiveSheet.Range("$A$4:$H$29").AutoFilter Field:=6, Criteria1:= _
+        xlFilterToday, Operator:=xlFilterDynamic
+End Sub
+
+
