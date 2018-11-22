@@ -83,7 +83,7 @@ Sub GetLabel(ByVal control As IRibbonControl, ByRef Labeling)
 
 Select Case control.ID
   
-  Case "CustomTab": Labeling = "Custom for Akash"
+  Case "CustomTab": Labeling = "Akash ki Potli"
   
   Case "GroupA": Labeling = "FAB specific"
   Case "aButton01": Labeling = "UnhideAllSheets"
