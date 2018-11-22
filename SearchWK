@@ -122,19 +122,19 @@ endsub:
                         For Each sht In ActiveWorkbook.Worksheets
 'Expand all groups in sheet
                             sht.Outline.ShowLevels RowLevels:=8, ColumnLevels:=8
-                            Set c = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
-                            If Not c Is Nothing Then
-                                firstAddress = c.Address
+                            Set C = sht.Cells.Find(Str, LookIn:=xlValues, LookAt:=xlPart, SearchOrder:=xlByRows, SearchDirection:=xlNext)
+                            If Not C Is Nothing Then
+                                firstAddress = C.Address
                                 Do
                                     lrow = Ws.Range("A" & Rows.Count).End(xlUp).Row
                                     Ws.Range("A1").Offset(lrow, 0).Value = Folderpath
                                     Ws.Range("B1").Offset(lrow, 0).Value = Value
                                     Ws.Range("C1").Offset(lrow, 0).Value = sht.Name
-                                    Ws.Range("D1").Offset(lrow, 0).Value = c.Address
+                                    Ws.Range("D1").Offset(lrow, 0).Value = C.Address
                                     Ws.Hyperlinks.Add Anchor:=Ws.Range("E1").Offset(lrow, 0), Address:=Folderpath & Value, SubAddress:= _
-                                    "'" & sht.Name & "'" & "!" & c.Address, TextToDisplay:="Link"
-                                    Set c = sht.Cells.FindNext(c)
-                                Loop While Not c Is Nothing And c.Address <> firstAddress
+                                    "'" & sht.Name & "'" & "!" & C.Address, TextToDisplay:="Link"
+                                    Set C = sht.Cells.FindNext(C)
+                                Loop While Not C Is Nothing And C.Address <> firstAddress
                             End If
                             Next sht
                         End If
