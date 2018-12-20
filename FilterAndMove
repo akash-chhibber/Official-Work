@@ -1,0 +1,90 @@
+Sub CAPSProjectSheet()
+   
+    'movetoanother
+   
+     Range("B2").Select
+    ActiveSheet.Range("$A$2:$K$3600").AutoFilter Field:=2, Criteria1:="Project"
+End Sub
+Sub CAPSProdSheet()
+    
+    Range("B2").Select
+    ActiveSheet.Range("$A$2:$K$3600").AutoFilter Field:=2, Criteria1:="Prod"
+    'movetoanother
+    
+End Sub
+Sub CAPSWorkStream()
+      Dim ary(), N As Long, i As Long
+    N = Range("caps").Count
+    ReDim ary(1 To N)
+    For i = 1 To N
+        ary(i) = Range("caps")(i).Value
+    Next i
+     Range("B2").Select
+    ActiveSheet.Range("$A$2:$K$3600").AutoFilter Field:=1, Criteria1:=ary, Operator:=xlFilterValues
+'     ActiveSheet.Range("$A$2:$K$36").AutoFilter Field:=1, Criteria1:=Array( _
+'    "CAPS - Internal", "CAPS - Vendor", "CAPS- Vendor"), Operator:=xlFilterValues
+End Sub
+Sub OtherWorkStream()
+      Dim ary(), N As Long, i As Long
+    N = Range("other").Count
+    ReDim ary(1 To N)
+    For i = 1 To N
+        ary(i) = Range("other")(i).Value
+    Next i
+     Range("B2").Select
+    ActiveSheet.Range("$A$2:$K$3600").AutoFilter Field:=1, Criteria1:=ary, Operator:=xlFilterValues
+    '----------------------------------simple method---------------------
+'    ActiveSheet.Range("$A$2:$K$36").AutoFilter Field:=1, Criteria1:=Array( _
+'    "Balance Confirmation - Internal", "Customer Dashboard  - Vendor", "IT Internal") _
+'    , Operator:=xlFilterValues
+End Sub
+
+    Sub ClearAllFilters()
+       On Error Resume Next
+        ActiveSheet.ShowAllData
+    End Sub
+Sub OnlyOpen()
+
+    ActiveSheet.Range("$A$2:$K$36").AutoFilter Field:=7, Criteria1:="Open"
+
+End Sub
+Sub ResetHeight()
+Rows("3:840").Select
+    Selection.RowHeight = 50
+End Sub
+Sub movetoanother()
+  On Error Resume Next
+    Dim val As String
+    val = InputBox("Enter New Sheet Name")
+    If val <> "" Then
+    If sheetExists(val) = False Then
+        Range("A2").Select
+        Range(Selection, Selection.End(xlToRight)).Select
+        Range(Selection, Selection.End(xlDown)).Select
+        Selection.Copy
+        Sheets.Add After:=ActiveSheet
+        ActiveSheet.Name = val
+        ActiveSheet.Paste
+        Selection.PasteSpecial Paste:=xlPasteColumnWidths, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+        ActiveSheet.Paste
+        
+    Else
+        MsgBox ("Target sheet already exists please remove the existing sheet")
+    End If
+Else: GoTo ProcError
+ProcError:
+  MsgBox ("Action Cancelled")
+ End If
+
+
+End Sub
+Function sheetExists(sheetToFind As String) As Boolean
+    sheetExists = False
+    For Each Sheet In Worksheets
+        If sheetToFind = Sheet.Name Then
+            sheetExists = True
+            Exit Function
+        End If
+        Next Sheet
+    End Function
