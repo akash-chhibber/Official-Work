@@ -110,6 +110,12 @@ Dim RowCount As Integer
 Application.ScreenUpdating = False
 For Each Ws In Worksheets
   Ws.Activate
+    Cells.Select
+     With Selection.Font
+        .ThemeColor = xlThemeColorLight1
+        .TintAndShade = 0
+    End With
+    
     ActiveWindow.DisplayGridlines = False
     ActiveWindow.Zoom = 90
     ActiveWindow.View = xlNormalView
@@ -157,9 +163,11 @@ Sub Correcting()
   Dim s As String
   Dim r As Range, C As Range
   Dim re As Object, mc As Object, m As Object
-  Dim i As Long
+  Dim I As Long
 Dim sht As Worksheet
+Dim shtstart As Worksheet
 Dim LastRow As Long
+Set shtstart = ActiveSheet
 Set sht = ActiveSheet
     'Range("F2").Select
 '    'ActiveCell.FormulaR1C1 = "=RC[-1]&""!<B>Original Text:!</B>""&RC[-2]" '&""</B>"""
@@ -178,20 +186,21 @@ Set sht = ActiveSheet
 'Selection.PasteSpecial xlPasteValues
  
 FindReplaceAll
-Range("F2:F" & LastRow).Select
-MakeSubTextBold
+'Range("F2:F" & LastRow).Select
+'MakeSubTextBold
  Boombox
+ shtstart.Activate
 End Sub
 Function MakeSubTextBold()
   Dim x As Long, Position As Long, cell As Range
-  Dim msg As String, Txt As String, Parts() As String
+  Dim msg As String, txt As String, Parts() As String
   For Each cell In Selection
     Position = 0
-    Txt = cell.Value
-    If InStr(Txt, "</B>") Then
-      If UBound(Split(Txt, "<B>")) = UBound(Split(Txt, "</B>")) Then
-        Txt = Replace(Txt, "</B>", "<B>")
-        Parts = Split(Txt, "<B>")
+    txt = cell.Value
+    If InStr(txt, "</B>") Then
+      If UBound(Split(txt, "<B>")) = UBound(Split(txt, "</B>")) Then
+        txt = Replace(txt, "</B>", "<B>")
+        Parts = Split(txt, "<B>")
         cell.Font.Bold = False
         cell.Value = Join(Parts, "")
         For x = 1 To UBound(Parts) Step 2
@@ -214,7 +223,7 @@ Dim sht As Worksheet
 Dim fnd As Variant
 Dim rplc As Variant
  
-fnd = "!"
+fnd = "|"
 rplc = Chr(10)
  
 For Each sht In ActiveWorkbook.Worksheets
@@ -229,7 +238,7 @@ Sub BoldTextString()
   Dim s As String
   Dim r As Range, C As Range
   Dim re As Object, mc As Object, m As Object
-  Dim i As Long
+  Dim I As Long
  
 Set r = Selection
 Set re = CreateObject("vbscript.regexp")
@@ -241,11 +250,11 @@ For Each C In r
         Set mc = re.Execute(C.Text)
     re.Pattern = "</?B>"
    C.Value = re.Replace(C.Text, "")
-    i = 0
+    I = 0
     For Each m In mc
-        C.Characters(m.firstindex + 1 - 7 * i, _
+        C.Characters(m.firstindex + 1 - 7 * I, _
             m.Length - 3).Font.Bold = True
-        i = i + 1
+        I = I + 1
     Next m
 Next C
 End Sub
@@ -629,9 +638,9 @@ Sub CreateTOC(Optional ByVal IncludeHiddenSheets As Boolean = False, Optional By
 
     If IncludeHiddenSheets Then
 
-        TOC.Cells(StartRow - 2, "B").Value = "Hidden sheets are italicized"
-
-        TOC.Cells(StartRow - 2, "B").Font.Size = 10
+'        TOC.Cells(StartRow - 2, "B").Value = "Hidden sheets are italicized"
+'
+'        TOC.Cells(StartRow - 2, "B").Font.Size = 10
 
         NewRow = StartRow
 
@@ -818,7 +827,7 @@ Sub Copytoanother()
 Dim entr As Integer
 Dim bFileSaveAs As Boolean
 Dim fNameAndPath As Variant
-Dim i As Integer
+Dim I As Integer
 entr = InputBox("Please enter 1 for current file or 2 for selecting another file as source file")
 Select Case entr
 Case 2
@@ -831,11 +840,11 @@ Case 1
 
 Code4Macro:
    Set src1 = ActiveWorkbook
-i = 0
+I = 0
    Set dest2 = Workbooks.Add
   For Each sh In src1.Sheets
-   i = 1 + i
-      sh.Copy After:=dest2.Sheets(i)
+   I = 1 + I
+      sh.Copy After:=dest2.Sheets(I)
    Next sh
 
 dest2.Activate
@@ -908,11 +917,11 @@ Do While CBool(Len(sFile))
         'do something with the matching file
         
         Set wbSource = Workbooks.Open(FOLDER_PATH & sFile)
-i = 0
+I = 0
  
   For Each sh In wbSource.Sheets
-   i = 1 + i
-      sh.Copy After:=wsTarget.Sheets(i)
+   I = 1 + I
+      sh.Copy After:=wsTarget.Sheets(I)
     Next
       'close the source workbook, increment the output row and get the next file
       wbSource.Close SaveChanges:=False
@@ -965,7 +974,7 @@ End Function
 
 Sub ClearExcessRowsAndColumns()
     Dim ar As Range, r As Long, C As Long, tr As Long, tc As Long, x As Range
-    Dim wksWks As Worksheet, ur As Range, arCount As Integer, i As Integer
+    Dim wksWks As Worksheet, ur As Range, arCount As Integer, I As Integer
     Dim blProtCont As Boolean, blProtScen As Boolean, blProtDO As Boolean
     Dim shp As Shape
 
@@ -1035,7 +1044,7 @@ Sub ClearExcessRowsAndColumns()
                 arCount = ur.Areas.Count
                 'determine the last column and row that contains data or formula
                 For Each ar In ur.Areas
-                    i = i + 1
+                    I = I + 1
                     tr = ar.Range("A1").Row + ar.Rows.Count - 1
                     tc = ar.Range("A1").Column + ar.Columns.Count - 1
                     If tc > C Then C = tc
@@ -1117,7 +1126,7 @@ Set Source = ActiveWorkbook
 Set Output = Workbooks.Add
 Application.DisplayAlerts = False
 
-Dim i As Integer
+Dim I As Integer
 
 For Each sh In Source.Worksheets
 
@@ -1163,7 +1172,7 @@ End Sub
 Sub Consolidate_all_sheets()
     Dim lastRb As Long
     Dim lastRoaSample As Long
-    Dim lastRoa As Long
+    Dim lastroa As Long
     Dim lastRoC As Long
     Dim Array_2()
     Dim Array_1
@@ -1195,26 +1204,26 @@ Sub Consolidate_all_sheets()
     End If
     
     
-    For i = 1 To Worksheets.Count
-        If Sheets(i).Name <> "Sample" Then
-            Sheets(i).Activate
+    For I = 1 To Worksheets.Count
+        If Sheets(I).Name <> "Sample" Then
+            Sheets(I).Activate
             With ActiveSheet
-                lastRoa = .Cells(.Rows.Count, "A").End(xlUp).Row
+                lastroa = .Cells(.Rows.Count, "A").End(xlUp).Row
             End With
             With ActiveSheet
                 lastRoC = .Cells(.Rows.Count, "C").End(xlUp).Row
             End With
             
             
-            If (lastRoC > lastRoa) Or (lastRoC = lastRoa) Then
+            If (lastRoC > lastroa) Or (lastRoC = lastroa) Then
             Columns("A:A").Select
             Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
-            Range("A1:A" & lastRoC).Value = Sheets(i).Name
+            Range("A1:A" & lastRoC).Value = Sheets(I).Name
             
             With ActiveSheet
                     lastRoaSample = .Cells(.Rows.Count, "A").End(xlUp).Row
                 End With
-                Sheets(i).Activate
+                Sheets(I).Activate
                 Range("A1:Z" & lastRoC).Copy
                 Worksheets(newSheetName).Activate
                 With Cells(lastRoaSample + 1, 1)
@@ -1228,13 +1237,13 @@ Sub Consolidate_all_sheets()
         Else
         Columns("A:A").Select
             Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
-            Range("A1:A" & lastRoa).Value = Sheets(i).Name
+            Range("A1:A" & lastroa).Value = Sheets(I).Name
             Worksheets(newSheetName).Activate
             With ActiveSheet
                 lastRoaSample = .Cells(.Rows.Count, "A").End(xlUp).Row
             End With
-            Sheets(i).Activate
-            Range("A1:Z" & lastRoa).Copy
+            Sheets(I).Activate
+            Range("A1:Z" & lastroa).Copy
             Worksheets(newSheetName).Activate
             With Cells(lastRoaSample + 1, 1)
                 .PasteSpecial xlPasteValues
@@ -1757,19 +1766,19 @@ Dim C As Variant
 mycol = t.Column
 myrow = t.Row
 
-Dim i As Integer
+Dim I As Integer
 
-i = 0
+I = 0
 'Set lookuprange = Range(ActiveSheet.Range("j1"))
 
 For Each C In Range("A1:A" & lrow)
-i = i + 1
+I = I + 1
     myarray = Split(C.Value2, "##")
     For Each d In myarray
         ActiveSheet.Cells(myrow, mycol).Select
         mystr = Application.WorksheetFunction.Trim(d)
         Selection.Value = mystr
-        ActiveSheet.Cells(myrow, mycol + 1) = ActiveSheet.Cells(i, 1).Value2
+        ActiveSheet.Cells(myrow, mycol + 1) = ActiveSheet.Cells(I, 1).Value2
         myrow = myrow + 1
         
     Next
@@ -1860,3 +1869,67 @@ Loop
 
 End Sub
 
+Function RemoveDupes2(txt As String, Optional delim As String = " ") As String
+    Dim x
+    With CreateObject("Scripting.Dictionary")
+        .CompareMode = vbTextCompare
+        For Each x In Split(txt, delim)
+            If Trim(x) <> "" And Not .exists(Trim(x)) Then .Add Trim(x), Nothing
+        Next
+        If .Count > 0 Then RemoveDupes2 = Join(.keys, delim)
+    End With
+End Function
+Sub CreateflashcardsfromQuizlet()
+'
+'
+' paste on row a3 and run below to shift answers near to questions
+' note run ready for excel first on the data
+
+'
+Dim lastroa As Long
+With ActiveSheet
+                lastroa = .Cells(.Rows.Count, "A").End(xlUp).Row
+            End With
+            
+ 
+    Range("B3").Select
+    ActiveCell.FormulaR1C1 = "=R[1]C[-1]"
+    Range("B3:B4").Select
+    Selection.AutoFill Destination:=Range("B3:B" & lastroa)
+    Range("B3:B" & lastroa).Select
+    ActiveWindow.SmallScroll Down:=132
+    Range("B" & lastroa).Select
+    ActiveWindow.SmallScroll Down:=-132
+
+    Columns("A:A").ColumnWidth = 60.71
+    Columns("B:B").ColumnWidth = 115.71
+    Range("A3").Select
+    Range(Selection, Selection.End(xlToRight)).Select
+    Range(Selection, Selection.End(xlDown)).Select
+    With Selection
+    .WrapText = True
+    End With
+    Selection.AutoFilter
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("B3").Select
+    ActiveSheet.Range("$A$3:$B$" & lastroa).AutoFilter Field:=2, Criteria1:="="
+    Range("A4").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Application.CutCopyMode = False
+    Selection.EntireRow.Delete
+    Selection.AutoFilter
+    
+End Sub
+
+Sub SortSelection()
+      With ActiveWorkbook.ActiveSheet.Sort
+        .SetRange Selection
+        .Header = xlNo
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+End Sub
